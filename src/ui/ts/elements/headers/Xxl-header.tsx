@@ -1,7 +1,7 @@
-export function XxlHeader(text: string) {
-    return <h1 className="xxl-header">{text}</h1>
+export function XxlHeader(text: string, additionalStyle: object) {
+    return <h1 className="xxl-header" style={additionalStyle && additionalStyle}>{text}</h1>
 }
 
-export function XxlHeaderColored(text: string) {
-    return <h1 className="xxl-header colored">{text}</h1>
+export function XxlHeaderColored(text: string, additionalStyle: object) {
+    return <h1 className="xxl-header colored" style={additionalStyle && additionalStyle}>{text}</h1>
 }
