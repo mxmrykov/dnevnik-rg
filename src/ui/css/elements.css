@@ -6,6 +6,7 @@
     --xxl-font-size: 2rem;
     --xl-font-size: 1.5rem;
     --base-property-colored: #E41655;
+    --base-shadow: 0 10px 24px 1px rgba(228,22,85,.3);
 }
 
 .button-basic {
@@ -15,6 +16,7 @@
     border-radius: var(--base-button-radius);
     border: var(--base-button-border-color);
     min-width: var(--base-button-min-width);
+    box-shadow: var(--base-shadow);
 }
 
 .xxl-header {
@@ -30,6 +32,17 @@
 }
 
 .line {
-    display: flex;
+    display: var(--base-position-flex);
+    align-items: var(--base-position-flex-vertical);
 }
 
+.col {
+    display: var(--base-position-flex);
+    flex-direction: var(--base-position-direction);
+    align-items: var(--base-position-flex-vertical);
+}
+
+.subtext {
+    color: rgb(204, 204, 204);
+    font-size: 0.85rem
+}

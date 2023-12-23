@@ -5,8 +5,9 @@
     --base-position-direction: column;
     --base-position-flex-vertical: center;
     --base-position-flex-horizontal: flex-start;
+    --spaced-position-flex-horizontal: space-around;
     --base-home-width: 100vh;
-    --base-home-background: url("../conent/bg-lines.png");
+    --base-home-background: url("../content/bg-lines.png");
 }
 
 .home-section {
