@@ -1,0 +1,35 @@
+:root{
+    --base-button-color: white;
+    --base-button-border-color: unset;
+    --base-button-radius: 7px;
+    --base-button-min-width: 100px;
+    --xxl-font-size: 2rem;
+    --xl-font-size: 1.5rem;
+    --base-property-colored: #E41655;
+}
+
+.button-basic {
+    padding: 7px 12px;
+    background-color: #E41655;
+    color: var(--base-button-color);
+    border-radius: var(--base-button-radius);
+    border: var(--base-button-border-color);
+    min-width: var(--base-button-min-width);
+}
+
+.xxl-header {
+    font-size: var(--xxl-font-size);
+}
+
+.xl-header {
+    font-size: var(--xl-font-size);
+}
+
+.colored {
+    color: var(--base-property-colored);
+}
+
+.line {
+    display: flex;
+}
+

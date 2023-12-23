@@ -1,0 +1,25 @@
+:root {
+    --base-object-width: 1100px;
+    --base-object-max-width: 95%;
+    --base-color: #E41655;
+    --base-font-color: white;
+    --base-box-padding: 10px;
+    --base-border-radius: 10px;
+    --min-box-width: 370px;
+}
+
+.home-header {
+    width: var(--base-object-width);
+    max-width: var(--base-object-max-width);
+}
+
+.island {
+    background-color: var(--base-color);
+    border-radius: var(--base-border-radius);
+    width: var(--min-box-width);
+    color: var(--base-font-color);
+    padding: var(--base-box-padding);
+    text-align: justify;
+    margin-bottom: var(--base-box-padding);
+    margin-top: var(--base-box-padding);
+}
