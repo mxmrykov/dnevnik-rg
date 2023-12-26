@@ -1,5 +1,6 @@
 :root {
     --base-object-width: 1100px;
+    --base-box-width: 400px;
     --base-object-max-width: 95%;
     --base-color: #E41655;
     --base-font-color: white;
@@ -7,6 +8,7 @@
     --base-border-radius: 10px;
     --margin-mid: 50px;
     --margin-sm: 25px;
+    --margin-s: 12px;
     --margin-xs: 5px;
     --min-box-width: 370px;
     --base-position-flex: flex;
@@ -18,6 +20,7 @@
 .home-header {
     width: var(--base-object-width);
     max-width: var(--base-object-max-width);
+    margin-top: var(--margin-sm);
 }
 
 .island {
@@ -44,6 +47,13 @@
     height: 350px;
 }
 
+.image-s {
+    margin-left: var(--margin-xs);
+    margin-right: var(--margin-xs);
+    width: 70px;
+    height: 70px;
+}
+
 .image-xs {
     margin-left: var(--margin-xs);
     margin-right: var(--margin-xs);
@@ -67,3 +77,57 @@
     flex-direction: var(--base-position-direction);
     align-items: var(--base-position-flex-vertical);
 }
+
+.dialog-translucent {
+    width: var(--base-box-width);
+    max-width: var(--base-object-max-width);
+    display: var(--base-position-flex);
+    align-items: var(--base-position-flex-vertical);
+    flex-wrap: var(--base-wrap-default);
+    justify-content: var(--base-position-flex-vertical);
+    padding: var(--base-box-padding);
+    background-color: rgba(0, 0, 0, 0.27);
+    border-radius: var(--base-border-radius);
+    backdrop-filter: blur(3px);
+}
+
+.full-height-center {
+    height: var(--base-home-width);
+    display: var(--base-position-flex);
+    align-items: var(--base-position-flex-vertical);
+}
+
+.dialog-message {
+    position: fixed;
+    width: 200px;
+    min-height: 30px;
+    bottom: 25px;
+    right: 25px;
+    font-size: 0.8rem;
+    border-radius: var(--base-border-radius);
+    padding: var(--base-box-padding);
+    animation: show-hide 5s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.dialog-message p {
+    max-width: 165px;
+}
+
+.info-colored {
+    border: 1px solid #575EFF;
+    background-color: #c9cbff;
+    color: #575EFF;
+}
+
+.error-colored {
+    border: 1px solid #c52c45;
+    background-color: #f1b2be;
+    color: #c52c45;
+}
+.success-colored {
+    border: 1px solid #077409;
+    background-color: #c1ffc1;
+    color: #077409;
+}
+

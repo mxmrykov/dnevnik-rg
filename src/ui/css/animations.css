@@ -11,3 +11,18 @@
         transform: translateY(0);
     }
 }
+
+@keyframes show-hide {
+    0% {
+        right: -200px;
+    }
+    10% {
+        right: 10px;
+    }
+    90% {
+        right: 10px;
+    }
+    100% {
+        right: -200px;
+    }
+}

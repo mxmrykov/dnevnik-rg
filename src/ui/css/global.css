@@ -11,8 +11,8 @@
 }
 
 .home-section {
-    padding-top: var(--base-global-padding-top);
-    padding-bottom: var(--base-global-padding-bottom);
+    /*padding-top: var(--base-global-padding-top);*/
+    /*padding-bottom: var(--base-global-padding-bottom);*/
     display: var(--base-position-flex);
     flex-direction: var(--base-position-direction);
     align-items: var(--base-position-flex-vertical);

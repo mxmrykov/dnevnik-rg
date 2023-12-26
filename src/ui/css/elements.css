@@ -11,12 +11,20 @@
 
 .button-basic {
     padding: 7px 12px;
-    background-color: #E41655;
+    background-color: var(--base-color);
     color: var(--base-button-color);
     border-radius: var(--base-button-radius);
     border: var(--base-button-border-color);
     min-width: var(--base-button-min-width);
     box-shadow: var(--base-shadow);
+    cursor: pointer;
+    border: 2px solid var(--base-color);;
+}
+
+.button-basic:hover {
+    color: var(--base-color);
+    background-color: inherit;
+    border: 2px solid var(--base-color);;
 }
 
 .xxl-header {
@@ -45,4 +53,29 @@
 .subtext {
     color: rgb(204, 204, 204);
     font-size: 0.85rem
+}
+
+input {
+    border-radius: var(--base-border-radius);
+    padding: var(--base-box-padding);
+    margin-block: var(--margin-s);
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.input-translucent {
+    border: 2px solid rgb(103, 103, 103);
+    background-color: inherit;
+    z-index: 5;
+}
+
+.input-translucent:focus {
+    border: 2px solid var(--base-color);
+    background-color: rgba(0, 0, 0, 0.27);
+    color: var(--base-button-color);
+    box-shadow: var(--base-shadow);
+}
+
+.input-translucent:focus::-webkit-input-placeholder {
+    color: var(--base-button-color)
 }

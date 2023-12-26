@@ -55,7 +55,7 @@ export default function Home(): React.JSX.Element {
                         {<Space/>}
                         {XxlHeader("тренировки", undefined)}
                     </div>
-                    {XlHeader("По художественной гимнастике")}
+                    {XlHeader("По художественной гимнастике", undefined)}
                     {
                         Island(
                             "Проходят в удобном формате. Вы можете тренироваться из любой точки Мира. Для этого понадобится мобильное устройство, планшет или ноутбук, всё необходимое для вашего вида спорта (предметы и инвентарь).",
@@ -68,7 +68,7 @@ export default function Home(): React.JSX.Element {
                         {XxlHeaderColored("к победе", {fontSize: "1.6rem"})}
                         {XxlHeader("!", {fontSize: "1.6rem"})}
                     </div>
-                    {XlHeader("Вместе с Дарьей Дубовой")}
+                    {XlHeader("Вместе с Дарьей Дубовой", undefined)}
                     {<Space/>}
                     {RedirectionButton("/#first-class", "Записаться")}
                     {ArrowsToTop(true, "Запишись на первое занятие и получи скидку 10%!")}
@@ -109,7 +109,7 @@ export default function Home(): React.JSX.Element {
                     {<Space/>}
                     {XxlHeaderColored("Дубова", undefined)}
                 </div>
-                {XlHeader("О себе")}
+                {XlHeader("О себе", undefined)}
                 <section className={"intro"} style={{marginBlock: 15}}>
                     <aside>
                         {galleryOne()}
