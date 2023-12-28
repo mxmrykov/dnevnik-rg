@@ -1,0 +1,23 @@
+.notification-menu {
+    background-color: rgba(252, 241, 227, 0.9);
+    width: 300px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: -300px;
+    z-index: 20;
+    border-radius: var(--base-border-radius) 0 0 var(--base-border-radius);
+    box-shadow: var(--base-shadow);
+}
+
+.notification-active {
+    right: 0;
+}
+
+.notification-activator {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    margin-left: -350px;
+    top: 10px;
+}

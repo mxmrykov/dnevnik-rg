@@ -14,7 +14,7 @@
 
 @keyframes show-hide {
     0% {
-        right: -200px;
+        right: -225px;
     }
     10% {
         right: 10px;
@@ -23,6 +23,6 @@
         right: 10px;
     }
     100% {
-        right: -200px;
+        right: -225px;
     }
 }
