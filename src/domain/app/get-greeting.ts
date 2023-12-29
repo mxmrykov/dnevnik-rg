@@ -13,8 +13,8 @@ export type greeting = {
 }
 export default function getGreeting(): greeting {
     let date = new Date(), time = date.getHours();
-
-    switch (time === 0) {
+    console.log()
+    switch (true) {
         case time > 22 || time < 6:
             return {greeting: "Доброй ночи", src: night}
         case time >= 6 && time < 10:

@@ -29,6 +29,7 @@ export default function Homepage() {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
     const [message, setMessage] = useState<React.JSX.Element>(<React.Fragment></React.Fragment>)
     const [dataPreloaded, setDataPreloaded] = useState<boolean>(false)
+    const DATE = new Date()
     const [greeting] = useState<greeting>(getGreeting())
     if (!dataPreloaded) {
         if (!authValid()) exit()
@@ -49,7 +50,7 @@ export default function Homepage() {
         {AdminSidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
         <section className={"homepage-section"}>
-            <header className={"line"}>
+            <header className={"line"} style={{justifyContent: "space-between"}}>
                 <div className={"greeting-header-home line"}>
                     <img alt={"greeting"} className={"image-s"} src={greeting?.src}/>
                     <article>
@@ -58,10 +59,22 @@ export default function Homepage() {
                     </article>
                 </div>
                 <div className={"greeting-header-home line"}>
-                    <h1 style={{fontSize: "3.5rem"}}>{GetDayOfWeek()}</h1>
+                    <article style={{fontSize: "3.5rem", color: "#E41655"}}>
+                        {GetDayOfWeek()}
+                    </article>
                     <article>
-                        <h3 style={{color: "white"}}>{greeting?.greeting},</h3>
-                        {XlHeaderColored(user?.fio?.split(" ")[1] + "!")}
+                        <h2 style={{color: "white"}}>
+                            <div className={"line"}>
+                                {XlHeader(DATE.getHours() > 9 ? DATE.getHours().toString() : "0" + DATE.getHours().toString(), undefined)}:
+                                {XlHeader(DATE.getMinutes() > 9 ? DATE.getMinutes().toString() : "0" + DATE.getMinutes().toString(), undefined)}
+                            </div>
+                        </h2>
+                        <div className={"line"} style={{color: "white"}}>
+                            {XlHeader(DATE.getDate().toString(), undefined)}
+                            {XlHeader("." + (+DATE.getMonth() + 1).toString(), undefined)}
+                            {XlHeader("." + DATE.getFullYear().toString(), undefined)}
+                        </div>
+
                     </article>
                 </div>
             </header>
