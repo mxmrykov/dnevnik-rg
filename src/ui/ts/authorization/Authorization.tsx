@@ -5,8 +5,6 @@ import XlHeader, {XlHeaderColored} from "../elements/headers/Xl-header.tsx";
 //@ts-ignore
 import Space from "../elements/headers/Space.tsx";
 //@ts-ignore
-import {Button} from "../elements/buttons/Button.tsx";
-//@ts-ignore
 import Message from "../message-aside/Message.tsx";
 //@ts-ignore
 import React, {useState} from "react";
@@ -38,7 +36,7 @@ export default function Authorization() {
                     <input className={"input-translucent"} placeholder={"Ваш пароль"} value={password} type="text"
                            onChange={(e) => setPassword(e.target.value)}/>
                     <button onClick={() => {
-                        let auth = Authorize({xUserId, password})
+                        Authorize({xUserId, password})
                             .then((result) => {
                                 if (result.error) {
                                     setMessage(Message("ERROR", result.text))

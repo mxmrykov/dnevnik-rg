@@ -74,7 +74,7 @@ export default function Home(): React.JSX.Element {
                     {ArrowsToTop(true, "Запишись на первое занятие и получи скидку 10%!")}
                 </article>
                 <aside>
-                    <img className={"image image-m"} id={"head-image"} src={introLogo} alt={"intro-image"}/>
+                    <img className={"image image-m"} id={"head-image"} src={introLogo} alt={"intro"}/>
                 </aside>
             </section>
             <section className={"intro"}>
@@ -262,8 +262,8 @@ const galleryOne = () => {
                 <img src={o} alt={key.toString()} className={"image image-m"} style={{marginInline: 0}}/>
             </p>
         })}
-        <a className="previous" id="previous">&lt;</a>
-        <a className="next" id="next">&gt;</a>
+        <p className="previous" id="previous">&lt;</p>
+        <p className="next" id="next">&gt;</p>
     </div>
 }
 
@@ -274,8 +274,8 @@ const galleryTwo = () => {
                 <img src={o} alt={key.toString()} className={"image image-m"} style={{marginInline: 0}}/>
             </p>
         })}
-        <a className="previous" id="previous_1">&lt;</a>
-        <a className="next" id="next_1">&gt;</a>
+        <p className="previous" id="previous_1">&lt;</p>
+        <p className="next" id="next_1">&gt;</p>
     </div>
 }
 
@@ -286,7 +286,7 @@ const galleryThree = () => {
                 <img src={o} alt={key.toString()} className={"image image-m"} style={{marginInline: 0}}/>
             </p>
         })}
-        <a className="previous" id="previous_2">&lt;</a>
-        <a className="next" id="next_2">&gt;</a>
+        <p className="previous" id="previous_2">&lt;</p>
+        <p className="next" id="next_2">&gt;</p>
     </div>
 }

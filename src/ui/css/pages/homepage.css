@@ -1,0 +1,22 @@
+:root {
+    --dnevnik-windows-bg: rgba(0, 0, 0, 0.66);
+}
+.greeting-header-home {
+    backdrop-filter: blur(3px);
+    width: 250px;
+    background-color: var(--dnevnik-windows-bg);
+    border-radius: var(--base-border-radius);
+    margin: var(--margin-s);
+    padding: var(--margin-s);
+    justify-content: var(--spaced-position-flex-horizontal);
+    max-width: 45%;
+}
+
+.full-width-window-homepage {
+    backdrop-filter: blur(3px);
+    max-width: var(--base-object-max-width);
+    margin: var(--margin-s);
+    padding: var(--margin-s);
+    background-color: var(--dnevnik-windows-bg);
+    border-radius: var(--base-border-radius);
+}

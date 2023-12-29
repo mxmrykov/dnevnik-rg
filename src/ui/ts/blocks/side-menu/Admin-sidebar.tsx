@@ -19,7 +19,7 @@ export default function AdminSidebar(props: { img: string, fio: string }): React
             />
             <article className={"sidebar-mini-profile col"}>
                 <div className={"line"} style={{width: "100%", justifyContent: "space-around"}}>
-                    <img alt={"mini profile image"} className={"image-s-m"} src={props?.img}/>
+                    <img alt={"mini profile"} className={"image-s-m"} src={props?.img}/>
                     <aside className={"col"} style={{alignItems: "start"}}>
                         <h3>{props?.fio?.split(" ")[1]}</h3>
                         <p>Администратор</p>
