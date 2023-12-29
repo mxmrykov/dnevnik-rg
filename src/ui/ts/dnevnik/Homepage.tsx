@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import "../../css/preset.css"
 import "../../css/global.css"
 import "../../css/pages/homepage.css"
+import "../../css/adapt/homepage.css"
 //@ts-ignore
 import authValid from "../../../domain/app/auth-check.ts";
 //@ts-ignore
@@ -59,7 +60,7 @@ export default function Homepage() {
                     </article>
                 </div>
                 <div className={"greeting-header-home line"}>
-                    <article style={{fontSize: "3.5rem", color: "#E41655"}}>
+                    <article style={{fontSize: "3.5rem", color: "#E41655"}} className={"bigsize-day-of-week"}>
                         {GetDayOfWeek()}
                     </article>
                     <article>
