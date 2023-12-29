@@ -1,0 +1,81 @@
+:root{
+    --base-button-color: white;
+    --base-button-border-color: unset;
+    --base-button-radius: 7px;
+    --base-button-min-width: 100px;
+    --xxl-font-size: 2rem;
+    --xl-font-size: 1.5rem;
+    --base-property-colored: #E41655;
+    --base-shadow: 0 10px 24px 1px rgba(228,22,85,.3);
+}
+
+.button-basic {
+    padding: 7px 12px;
+    background-color: var(--base-color);
+    color: var(--base-button-color);
+    border-radius: var(--base-button-radius);
+    border: var(--base-button-border-color);
+    min-width: var(--base-button-min-width);
+    box-shadow: var(--base-shadow);
+    cursor: pointer;
+    border: 2px solid var(--base-color);;
+}
+
+.button-basic:hover {
+    color: var(--base-color);
+    background-color: inherit;
+    border: 2px solid var(--base-color);;
+}
+
+.xxl-header {
+    font-size: var(--xxl-font-size);
+}
+
+.xl-header {
+    font-size: var(--xl-font-size);
+}
+
+.colored {
+    color: var(--base-property-colored);
+}
+
+.line {
+    display: var(--base-position-flex);
+    align-items: var(--base-position-flex-vertical);
+}
+
+.col {
+    display: var(--base-position-flex);
+    flex-direction: var(--base-position-direction);
+    align-items: var(--base-position-flex-vertical);
+}
+
+.subtext {
+    color: rgb(204, 204, 204);
+    font-size: 0.85rem
+}
+
+input {
+    border-radius: var(--base-border-radius);
+    padding: var(--base-box-padding);
+    margin-block: var(--margin-s);
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.input-translucent {
+    border: 2px solid rgb(103, 103, 103);
+    background-color: inherit;
+    z-index: 5;
+}
+
+.input-translucent:focus {
+    border: 2px solid var(--base-color);
+    background-color: rgba(0, 0, 0, 0.27);
+    color: var(--base-button-color);
+    box-shadow: var(--base-shadow);
+}
+
+.input-translucent:focus::-webkit-input-placeholder {
+    color: var(--base-button-color)
+}

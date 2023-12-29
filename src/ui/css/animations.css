@@ -1,0 +1,28 @@
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes show-hide {
+    0% {
+        right: -225px;
+    }
+    10% {
+        right: 10px;
+    }
+    90% {
+        right: 10px;
+    }
+    100% {
+        right: -225px;
+    }
+}
