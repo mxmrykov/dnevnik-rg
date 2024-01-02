@@ -28,6 +28,8 @@ import XlHeader, {XlHeaderColored} from "../elements/headers/Xl-header.tsx";
 import Space from "../elements/headers/Space.tsx";
 // @ts-ignore
 import PreloadListCoaches from "../../../domain/http/preload-lists/preload-list-coaches.ts";
+// @ts-ignore
+import isAdminValid, {isCoachValid, isPupilValid} from "../../../domain/app/validations/new-user-validation.ts";
 
 export default function CreateUser() {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -179,12 +181,14 @@ export default function CreateUser() {
                                     }
                                 />
                             </span>
-                            <span className={"col"}>
+                            {newUser?.role === "PUPIL" && <span className={"col"}>
                                 <label style={{
                                     color: "white",
                                     textAlign: "left"
                                 }}>
-                                    {user?.role === "COACH" ? "Тренер (вы)" : "Тренер"}
+                                    {// @ts-ignore
+                                        user?.role === "COACH" ? "Тренер (вы)" : "Тренер"
+                                    }
                                 </label>
                                 {user?.role === "ADMIN" ? <select
                                     className={"input-translucent"}
@@ -201,11 +205,11 @@ export default function CreateUser() {
                                         </option>
                                     })}
                                 </select> : <input
-                                className={"input-translucent"}
-                                value={user?.key}
-                                disabled={true}
+                                    className={"input-translucent"}
+                                    value={user?.key}
+                                    disabled={true}
                                 />}
-                            </span>
+                            </span>}
                             <textarea
                                 className={"input-translucent"}
                                 style={{width: 280, maxWidth: "95%"}}
@@ -241,7 +245,24 @@ export default function CreateUser() {
                     <button
                         className={"button-basic"}
                         onClick={() => {
-
+                            let isUserValid: boolean
+                            switch (newUser?.role) {
+                                case "ADMIN":
+                                    isUserValid = isAdminValid(newUser as newAdminModel)
+                                    break
+                                case "COACH":
+                                    isUserValid = isCoachValid(newUser as newCoachModel)
+                                    break
+                                case "PUPIL":
+                                    isUserValid = isPupilValid(newUser as newPupilModel)
+                                    break
+                            }
+                            if (isUserValid) {
+                                // http request
+                            } else {
+                                setMessage(Message("ERROR", "Неверно заполнены поля"))
+                                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                            }
                         }}
                     >
                         Создать
