@@ -23,7 +23,7 @@
 
 .button-basic:hover {
     color: var(--base-color);
-    background-color: inherit;
+    background-color: transparent;
     border: 2px solid var(--base-color);;
 }
 
@@ -48,6 +48,13 @@
     display: var(--base-position-flex);
     flex-direction: var(--base-position-direction);
     align-items: var(--base-position-flex-vertical);
+}
+
+.col-center {
+    display: var(--base-position-flex);
+    flex-direction: var(--base-position-direction);
+    align-items: var(--base-position-flex-vertical);
+    justify-content: var(--base-position-flex-vertical);
 }
 
 .subtext {
@@ -78,4 +85,15 @@ input {
 
 .input-translucent:focus::-webkit-input-placeholder {
     color: var(--base-button-color)
+}
+
+.forbidden-dialog {
+    backdrop-filter: blur(3px);
+    max-width: var(--base-object-max-width);
+    margin: var(--margin-sm);
+    padding: var(--margin-sm);
+    background-color: var(--dnevnik-windows-bg);
+    border-radius: var(--base-border-radius);
+    color: white;
+    width: 350px;
 }

@@ -14,7 +14,6 @@
 
 .full-width-window-homepage {
     backdrop-filter: blur(3px);
-    max-width: var(--base-object-max-width);
     margin: var(--margin-s);
     padding: var(--margin-s);
     background-color: var(--dnevnik-windows-bg);

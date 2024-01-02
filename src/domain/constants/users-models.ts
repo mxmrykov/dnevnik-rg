@@ -34,3 +34,9 @@ export type adminModel = {
     logo_uri: string;
     role: string;
 }
+
+export type adminListModel = {
+    key: number;
+    fio: string;
+    logo_uri: string;
+}

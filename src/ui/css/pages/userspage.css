@@ -1,0 +1,18 @@
+.dropdown-menu {
+    height: 0;
+    overflow: hidden;
+    display: flex;
+}
+.dropdown-active {
+    height: auto;
+}
+
+.users-list-user {
+    border: 3px solid transparent;
+    border-radius: var(--base-border-radius);
+    padding: var(--margin-sm)
+}
+
+.users-list-user:hover {
+    border: 3px solid var(--base-property-colored);
+}
