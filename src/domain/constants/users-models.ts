@@ -40,3 +40,40 @@ export type adminListModel = {
     fio: string;
     logo_uri: string;
 }
+
+export type coachListModel = {
+    key: number;
+    fio: string;
+    logo_uri: string;
+}
+
+export type pupilListModel = {
+    key: number;
+    fio: string;
+    logo_uri: string;
+}
+
+export type newAdminModel = {
+    fio: string;
+    role: string;
+}
+
+export type newCoachModel = {
+    fio: string;
+    role: string;
+    home_city: string;
+    training_city: string;
+    birthday: string;
+    about: string;
+}
+
+export type newPupilModel = {
+    fio: string;
+    role: string;
+    coach: number;
+    home_city: string;
+    training_city: string;
+    birthday: string;
+    about: string;
+    coach_review: string;
+}

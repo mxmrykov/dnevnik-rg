@@ -11,6 +11,8 @@ html, body {
     outline: none;
     scroll-behavior: smooth;
     transition: 0.2s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 ul {

@@ -1,20 +1,20 @@
 // @ts-ignore
-import {adminListModel} from "../../constants/users-models.ts";
+import {pupilListModel} from "../../constants/users-models.ts";
 // @ts-ignore
 import * as constants from "../../constants/api.ts";
 // @ts-ignore
-import {PreloadAdminList} from "../../constants/response.ts";
+import {PreloadPupilList} from "../../constants/response.ts";
 import axios from "axios";
 
-export default async function PreloadListAdmins():
-    Promise<{ error: boolean, message: string, user: adminListModel[] }> {
+export default async function PreloadListPupils():
+    Promise<{ error: boolean, message: string, user: pupilListModel[] }> {
     if (!
         (localStorage.getItem("role") === "ADMIN")
     ) return Promise.resolve(
         {error: true, message: "Роль пользователя не совпадает для запроса", user: null}
     )
-    return await constants.instance.get<PreloadAdminList>(
-        "/users/admin/list",
+    return await constants.instance.get<PreloadPupilList>(
+        "/users/pupil/list",
         {
             headers: {
                 "X-User-Id": localStorage.getItem("key"),

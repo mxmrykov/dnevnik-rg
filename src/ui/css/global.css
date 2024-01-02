@@ -28,6 +28,5 @@
     flex-direction: var(--base-position-direction);
     width: var(--base-object-width);
     margin-top: 50px;
-    border: 1px solid black;
     max-width: var(--base-object-max-width);
 }
