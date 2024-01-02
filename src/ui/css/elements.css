@@ -74,6 +74,7 @@ input {
     border: 2px solid rgb(103, 103, 103);
     background-color: inherit;
     z-index: 5;
+    color: rgb(173, 173, 173);;
 }
 
 .input-translucent:focus {

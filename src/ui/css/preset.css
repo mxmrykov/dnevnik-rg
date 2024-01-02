@@ -40,3 +40,10 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+textarea {
+    resize: none;
+    border-radius: var(--base-border-radius);
+    padding: var(--base-box-padding);
+    font-size: 0.9rem;
+}

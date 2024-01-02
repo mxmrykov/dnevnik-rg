@@ -13,7 +13,7 @@ import {PreloadUser} from "../../../domain/http/user-preload.ts";
 // @ts-ignore
 import Message from "../message-aside/Message.tsx";
 import {
-    adminModel,
+    adminModel, coachListModel,
     coachModel,
     newAdminModel,
     newCoachModel, newPupilModel,
@@ -26,6 +26,8 @@ import PageForbidden from "../blocks/forbidden/Page-forbidden.tsx";
 import XlHeader, {XlHeaderColored} from "../elements/headers/Xl-header.tsx";
 // @ts-ignore
 import Space from "../elements/headers/Space.tsx";
+// @ts-ignore
+import PreloadListCoaches from "../../../domain/http/preload-lists/preload-list-coaches.ts";
 
 export default function CreateUser() {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -33,6 +35,7 @@ export default function CreateUser() {
     const [dataPreloaded, setDataPreloaded] = useState<boolean>(false)
     const [newUser, setNewUser] =
         useState<newAdminModel | newCoachModel | newPupilModel>()
+    const [shortCoachList, setShortCoachList] = useState<coachListModel[]>()
     if (!dataPreloaded) {
         if (!authValid()) exit()
         PreloadUser().then(r => {
@@ -80,11 +83,22 @@ export default function CreateUser() {
                             <select
                                 className={"input-translucent"}
                                 style={{padding: "7px 12px", marginBottom: 12}}
-                                onChange={e => setNewUser(
-                                    prevState => ({
-                                        ...prevState, role: e.target.value
-                                    }))
-                                }
+                                onChange={e => {
+                                    setNewUser(
+                                        prevState => ({
+                                            ...prevState, role: e.target.value
+                                        }))
+                                    e.target.value === "COACH" && PreloadListCoaches().then(r => {
+                                        if (r.error) {
+                                            setMessage(Message("ERROR", r.message))
+                                            setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                        } else {
+                                            setShortCoachList(r.user)
+                                            setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                            setMessage(Message("SUCCESS", r.message))
+                                        }
+                                    })
+                                }}
                             >
                                 <option value="ADMIN">Администратор</option>
                                 <option value="COACH">Тренер</option>
@@ -97,6 +111,11 @@ export default function CreateUser() {
                                 className={"input-translucent"}
                                 placeholder={"Иванов Иван Иванович"}
                                 style={{width: 300, maxWidth: "95%"}}
+                                onChange={e => setNewUser(
+                                    prevState => ({
+                                        ...prevState, fio: e.target.value
+                                    }))
+                                }
                             />
                         </span>
                     </div>
@@ -121,6 +140,11 @@ export default function CreateUser() {
                                 <input
                                     className={"input-translucent"}
                                     placeholder={"Москва"}
+                                    onChange={e => setNewUser(
+                                        prevState => ({
+                                            ...prevState, home_city: e.target.value
+                                        }))
+                                    }
                                 />
                             </span>
                             <span className={"col"}>
@@ -132,6 +156,11 @@ export default function CreateUser() {
                                 <input
                                     className={"input-translucent"}
                                     placeholder={"Москва"}
+                                    onChange={e => setNewUser(
+                                        prevState => ({
+                                            ...prevState, training_city: e.target.value
+                                        }))
+                                    }
                                 />
                             </span>
                             <span className={"col"}>
@@ -143,8 +172,65 @@ export default function CreateUser() {
                                 <input
                                     className={"input-translucent"}
                                     type={"date"}
+                                    onChange={e => setNewUser(
+                                        prevState => ({
+                                            ...prevState, birthday: e.target.value
+                                        }))
+                                    }
                                 />
                             </span>
+                            <span className={"col"}>
+                                <label style={{
+                                    color: "white",
+                                    textAlign: "left"
+                                }}>
+                                    {user?.role === "COACH" ? "Тренер (вы)" : "Тренер"}
+                                </label>
+                                {user?.role === "ADMIN" ? <select
+                                    className={"input-translucent"}
+                                    style={{padding: "7px 12px", marginBottom: 12}}
+                                    onChange={e => setNewUser(
+                                        prevState => ({
+                                            ...prevState, coach: e.target.value
+                                        }))
+                                    }>
+                                    {shortCoachList?.map(coach => {
+                                        let fi = coach?.fio.split(" ")
+                                        return <option value={coach?.key}>
+                                            {fi[0] + " " + fi[1]}
+                                        </option>
+                                    })}
+                                </select> : <input
+                                className={"input-translucent"}
+                                value={user?.key}
+                                disabled={true}
+                                />}
+                            </span>
+                            <textarea
+                                className={"input-translucent"}
+                                style={{width: 280, maxWidth: "95%"}}
+                                rows={5}
+                                placeholder={"О себе"}
+                                onChange={e => setNewUser(
+                                    prevState => ({
+                                        ...prevState, about: e.target.value
+                                    }))
+                                }>
+                            </textarea>
+                            {
+                                newUser?.role === "PUPIL" &&
+                                <textarea
+                                    className={"input-translucent"}
+                                    style={{width: 280, maxWidth: "95%"}}
+                                    rows={5}
+                                    placeholder={"Комментарий от тренера"}
+                                    onChange={e => setNewUser(
+                                        prevState => ({
+                                            ...prevState, coach_review: e.target.value
+                                        }))
+                                    }>
+                            </textarea>
+                            }
                         </div>
                     </article>
                 }
@@ -152,7 +238,12 @@ export default function CreateUser() {
                     className={"line"}
                     style={{justifyContent: "center"}}
                 >
-                    <button className={"button-basic"}>
+                    <button
+                        className={"button-basic"}
+                        onClick={() => {
+
+                        }}
+                    >
                         Создать
                     </button>
                 </footer>
