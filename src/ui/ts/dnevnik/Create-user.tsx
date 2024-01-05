@@ -3,7 +3,7 @@ import AdminSidebar from "../blocks/side-menu/Admin-sidebar.tsx";
 // @ts-ignore
 import Notifications from "../blocks/Notifications.tsx";
 // @ts-ignore
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 // @ts-ignore
 import authValid from "../../../domain/app/auth-check.ts";
 // @ts-ignore
@@ -30,6 +30,10 @@ import Space from "../elements/headers/Space.tsx";
 import PreloadListCoaches from "../../../domain/http/preload-lists/preload-list-coaches.ts";
 // @ts-ignore
 import isAdminValid, {isCoachValid, isPupilValid} from "../../../domain/app/validations/new-user-validation.ts";
+// @ts-ignore
+import DialogWindow from "../dialog/Dialog-window.tsx";
+// @ts-ignore
+import NewAdmin from "../../../domain/http/users/new-admin.ts";
 
 export default function CreateUser() {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -38,6 +42,7 @@ export default function CreateUser() {
     const [newUser, setNewUser] =
         useState<newAdminModel | newCoachModel | newPupilModel>()
     const [shortCoachList, setShortCoachList] = useState<coachListModel[]>()
+    const [dialogWindow, setDialogWindow] = useState<React.JSX.Element>()
     if (!dataPreloaded) {
         if (!authValid()) exit()
         PreloadUser().then(r => {
@@ -61,6 +66,7 @@ export default function CreateUser() {
         {message}
         {AdminSidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
+        {dialogWindow}
         {user?.role === "ADMIN" ?
             <section className={"homepage-section"} style={{alignItems: "center", width: 900, maxWidth: "95%"}}>
                 <header className={"line"} style={{justifyContent: "space-between", width: "100%"}}>
@@ -245,23 +251,67 @@ export default function CreateUser() {
                     <button
                         className={"button-basic"}
                         onClick={() => {
-                            let isUserValid: boolean
                             switch (newUser?.role) {
                                 case "ADMIN":
-                                    isUserValid = isAdminValid(newUser as newAdminModel)
+                                    if (isAdminValid(newUser as newCoachModel)) {
+                                        NewAdmin(newUser?.fio).then(r => {
+                                            if (r.error) {
+                                                setMessage(Message("ERROR", r.text))
+                                                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                            } else {
+                                                setDialogWindow(DialogWindow("Пользователь создан", <article
+                                                    className={"col-center"}>
+                                                    {Space()}
+                                                    <p>
+                                                        ID Пользователя: {r?.data?.key}
+                                                    </p>
+                                                    <p>
+                                                        Пароль: {r?.data?.private?.checksum}
+                                                    </p>
+                                                    <p className={"subtext"} style={{textAlign: "center"}}>
+                                                        Скопируйте эти данные и вышлите конечному пользователю
+                                                    </p>
+                                                    {Space()}
+                                                    <footer className={"line"}>
+                                                        <button
+                                                            className={"button-basic"}
+                                                            onClick={() => {
+                                                                navigator.clipboard.writeText(`${r?.data?.key}\n${r?.data?.private?.checksum}`)
+                                                            }}>
+                                                            Скопировать данные
+                                                        </button>
+                                                        <button
+                                                            className={"button-basic"}
+                                                            onClick={() => {
+                                                                setDialogWindow(<React.Fragment></React.Fragment>)
+                                                            }}>
+                                                            Закрыть
+                                                        </button>
+                                                    </footer>
+                                                </article>))
+                                            }
+                                        })
+                                    } else {
+                                        setMessage(Message("ERROR", "Неверно заполнены поля"))
+                                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                    }
                                     break
                                 case "COACH":
-                                    isUserValid = isCoachValid(newUser as newCoachModel)
+                                    if (isCoachValid(newUser as newCoachModel)) {
+
+                                    } else {
+                                        setMessage(Message("ERROR", "Неверно заполнены поля"))
+                                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                    }
                                     break
                                 case "PUPIL":
-                                    isUserValid = isPupilValid(newUser as newPupilModel)
+                                    if (isPupilValid(newUser as newPupilModel)) {
+                                        // http request
+                                    } else {
+                                        setMessage(Message("ERROR", "Неверно заполнены поля"))
+                                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                    }
                                     break
-                            }
-                            if (isUserValid) {
-                                // http request
-                            } else {
-                                setMessage(Message("ERROR", "Неверно заполнены поля"))
-                                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
                             }
                         }}
                     >

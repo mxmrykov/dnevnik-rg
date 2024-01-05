@@ -35,6 +35,20 @@ export type adminModel = {
     role: string;
 }
 
+export type adminFullModel = {
+    UDID: number;
+    key: number;
+    fio: string;
+    date_reg: string;
+    logo_uri: string;
+    role: string;
+    private: {
+        checksum: string;
+        last_update: string;
+        token: string;
+    }
+}
+
 export type adminListModel = {
     key: number;
     fio: string;

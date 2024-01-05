@@ -1,4 +1,12 @@
-import {adminListModel, adminModel, coachListModel, coachModel, pupilListModel, pupilModel} from "./users-models";
+import {
+    adminFullModel,
+    adminListModel,
+    adminModel,
+    coachListModel,
+    coachModel,
+    pupilListModel,
+    pupilModel
+} from "./users-models";
 
 export type PreloadPupilResponse = {
     data: pupilModel
@@ -35,6 +43,13 @@ export type PreloadCoachList = {
 
 export type PreloadPupilList = {
     data: pupilListModel[]
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+
+export type getFullAdminResponse = {
+    data: adminFullModel,
     status_code: number;
     message: string;
     isError: boolean;
