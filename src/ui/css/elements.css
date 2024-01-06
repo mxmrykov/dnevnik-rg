@@ -85,7 +85,7 @@ input {
 }
 
 .input-translucent:focus::-webkit-input-placeholder {
-    color: var(--base-button-color)
+    color: rgb(173, 173, 173);
 }
 
 .forbidden-dialog {

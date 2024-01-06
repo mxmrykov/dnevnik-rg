@@ -2,14 +2,12 @@
 import React, {useState} from "react";
 import "../../css/pages/userspage.css"
 // @ts-ignore
-import AdminSidebar from "../blocks/side-menu/Admin-sidebar.tsx";
-// @ts-ignore
 import Notifications from "../blocks/Notifications.tsx";
 import {
     adminListModel,
     adminModel,
     coachListModel,
-    coachModel,
+    coachModel, pupilListModel,
     pupilModel
     // @ts-ignore
 } from "../../../domain/constants/users-models.ts";
@@ -33,12 +31,16 @@ import PreloadListAdmins from "../../../domain/http/preload-lists/preload-list-a
 import PreloadListCoaches from "../../../domain/http/preload-lists/preload-list-coaches.ts";
 // @ts-ignore
 import PreloadListPupils from "../../../domain/http/preload-lists/preload-list-pupils.ts";
+// @ts-ignore
+import Sidebar from "../blocks/side-menu/Sidebar.tsx";
+// @ts-ignore
+import PreloadCoachPupils from "../../../domain/http/preload-lists/preload-coach-pupils.ts";
 
 export default function UsersPage(): React.JSX.Element {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
     const [shortAdminList, setShortAdminList] = useState<adminListModel[]>()
     const [shortCoachList, setShortCoachList] = useState<coachListModel[]>()
-    const [shortPupilList, setShortPupilList] = useState<coachListModel[]>()
+    const [shortPupilList, setShortPupilList] = useState<pupilListModel[]>()
     const [message, setMessage] = useState<React.JSX.Element>(<React.Fragment></React.Fragment>)
     const [dataPreloaded, setDataPreloaded] = useState<boolean>(false)
     const [dropDownAdminsActive, setDropDownAdminsActive] = useState<boolean>(false)
@@ -54,45 +56,48 @@ export default function UsersPage(): React.JSX.Element {
                 setUser(r.user)
                 setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
                 setMessage(Message("SUCCESS", r.message))
-            }
-        })
-        PreloadListAdmins().then(r => {
-            if (r.error) {
-                setMessage(Message("ERROR", r.message))
-                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
-            } else {
-                setShortAdminList(r.user)
-                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
-                setMessage(Message("SUCCESS", r.message))
-            }
-        })
-        PreloadListCoaches().then(r => {
-            if (r.error) {
-                setMessage(Message("ERROR", r.message))
-                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
-            } else {
-                setShortCoachList(r.user)
-                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
-                setMessage(Message("SUCCESS", r.message))
-            }
-        })
-        PreloadListPupils().then(r => {
-            if (r.error) {
-                setMessage(Message("ERROR", r.message))
-                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
-            } else {
-                setShortPupilList(r.user)
-                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
-                setMessage(Message("SUCCESS", r.message))
+                user?.role === "ADMIN" && PreloadListAdmins().then(r => {
+                    if (r.error) {
+                        setMessage(Message("ERROR", r.message))
+                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                    } else {
+                        setShortAdminList(r.user)
+                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                        setMessage(Message("SUCCESS", r.message))
+                    }
+                })
+                user?.role === "ADMIN" && PreloadListCoaches().then(r => {
+                    if (r.error) {
+                        setMessage(Message("ERROR", r.message))
+                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                    } else {
+                        setShortCoachList(r.user)
+                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                        setMessage(Message("SUCCESS", r.message))
+                    }
+                })
+                let targetFuncListPupils: Promise<{ error: boolean, message: string, user: pupilListModel[] }>
+                if (localStorage.getItem("role") === "ADMIN") targetFuncListPupils = PreloadListPupils()
+                else if (localStorage.getItem("role") === "COACH") targetFuncListPupils = PreloadCoachPupils()
+                targetFuncListPupils?.then(r => {
+                    if (r.error) {
+                        setMessage(Message("ERROR", r.message))
+                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                    } else {
+                        setShortPupilList(r.user)
+                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                        setMessage(Message("SUCCESS", r.message))
+                    }
+                })
             }
         })
         setDataPreloaded(true)
     }
     return <section className={"home-section"}>
         {message}
-        {AdminSidebar({img: user?.logo_uri, fio: user?.fio})}
+        {Sidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
-        {user?.role === "ADMIN" ?
+        {user?.role === "ADMIN" || user?.role === "COACH" ?
             <section className={"homepage-section"}>
                 <header className={"line"} style={{justifyContent: "space-between"}}>
                     <div className={"greeting-header-home col-center"}>
@@ -104,7 +109,7 @@ export default function UsersPage(): React.JSX.Element {
                         Создать
                     </a>
                 </header>
-                <article className={"full-width-window-homepage"}>
+                {user?.role === "ADMIN" && <article className={"full-width-window-homepage"}>
                     <header
                         className={"line"}
                         onClick={() => setDropDownAdminsActive(!dropDownAdminsActive)}
@@ -143,8 +148,8 @@ export default function UsersPage(): React.JSX.Element {
                             </section>
                             : <p className={"subtext"}>Администраторы не найдены</p>}
                     </data>
-                </article>
-                <article className={"full-width-window-homepage"}>
+                </article>}
+                {user?.role === "ADMIN" && <article className={"full-width-window-homepage"}>
                     <header
                         className={"line"}
                         onClick={() => setDropDownCoachesActive(!dropDownCoachesActive)}
@@ -183,7 +188,7 @@ export default function UsersPage(): React.JSX.Element {
                             </section>
                             : <p className={"subtext"}>Тренеры не найдены</p>}
                     </data>
-                </article>
+                </article>}
                 <article className={"full-width-window-homepage"}>
                     <header
                         className={"line"}

@@ -18,8 +18,8 @@ export default function AdminSidebar(props: { img: string, fio: string }): React
                 onClick={() => setMenuActive(!menuActive)}
             />
             <article className={"sidebar-mini-profile col"}>
-                <div className={"line"} style={{width: "100%", justifyContent: "space-around"}}>
-                    <img alt={"mini profile"} className={"image-s-m"} src={props?.img}/>
+                <div className={"line"} style={{width: "100%", justifyContent: "flex-start"}}>
+                    <img alt={"mini profile"} className={"image-s-m"} style={{marginInline: 10}} src={props?.img}/>
                     <aside className={"col"} style={{alignItems: "start"}}>
                         <h3>{props?.fio?.split(" ")[1]}</h3>
                         <p>Администратор</p>

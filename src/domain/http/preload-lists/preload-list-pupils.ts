@@ -6,14 +6,14 @@ import * as constants from "../../constants/api.ts";
 import {PreloadPupilList} from "../../constants/response.ts";
 import axios from "axios";
 
-export default async function PreloadListPupils():
-    Promise<{ error: boolean, message: string, user: pupilListModel[] }> {
+export default function PreloadListPupils():
+    Promise<{ error: boolean, message: string, user: pupilListModel[]}> {
     if (!
         (localStorage.getItem("role") === "ADMIN")
     ) return Promise.resolve(
         {error: true, message: "Роль пользователя не совпадает для запроса", user: null}
     )
-    return await constants.instance.get<PreloadPupilList>(
+    return constants.instance.get<PreloadPupilList>(
         "/users/pupil/list",
         {
             headers: {

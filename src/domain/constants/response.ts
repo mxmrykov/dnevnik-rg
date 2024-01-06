@@ -1,9 +1,9 @@
 import {
     adminFullModel,
     adminListModel,
-    adminModel,
+    adminModel, coachFullModel,
     coachListModel,
-    coachModel,
+    coachModel, pupilFullModel,
     pupilListModel,
     pupilModel
 } from "./users-models";
@@ -50,6 +50,19 @@ export type PreloadPupilList = {
 
 export type getFullAdminResponse = {
     data: adminFullModel,
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+
+export type getFullCoachResponse = {
+    data: coachFullModel,
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+export type getFullPupilResponse = {
+    data: pupilFullModel,
     status_code: number;
     message: string;
     isError: boolean;

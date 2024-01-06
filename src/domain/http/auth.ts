@@ -12,10 +12,10 @@ type AuthResponse = {
     Message: string;
     IsError: boolean;
 }
-export default function Authorize(user: { xUserId: string; password: string; }):
+export default async function Authorize(user: { xUserId: string; password: string; }):
     Promise<{ error: boolean, text: string }> {
     let xUserId = user.xUserId, checksum = user.password
-    return constants.instance.post<AuthResponse>(
+    return await constants.instance.post<AuthResponse>(
         "/auth",
         {
             checksum: checksum

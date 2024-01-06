@@ -17,7 +17,7 @@ export default function DialogWindow
             }}>
             <article className={"dialog-window"}>
                 <header>
-                    {XlHeader(header, undefined)}
+                    {XlHeader(header, {textAlign: "center"})}
                 </header>
                 {body}
             </article>

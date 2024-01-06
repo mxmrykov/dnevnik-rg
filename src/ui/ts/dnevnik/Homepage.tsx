@@ -14,8 +14,6 @@ import {adminModel, coachModel, pupilModel} from "../../../domain/constants/user
 //@ts-ignore
 import {PreloadUser} from "../../../domain/http/user-preload.ts";
 //@ts-ignore
-import AdminSidebar from "../blocks/side-menu/Admin-sidebar.tsx";
-//@ts-ignore
 import Notifications from "../blocks/Notifications.tsx";
 // @ts-ignore
 import getGreeting, {greeting} from "../../../domain/app/get-greeting.ts";
@@ -25,6 +23,8 @@ import XlHeader, {XlHeaderColored} from "../elements/headers/Xl-header.tsx";
 import Space from "../elements/headers/Space.tsx";
 // @ts-ignore
 import GetDayOfWeek from "../../../domain/app/get-day-of-week.ts";
+// @ts-ignore
+import Sidebar from "../blocks/side-menu/Sidebar.tsx";
 
 export default function Homepage() {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -48,7 +48,7 @@ export default function Homepage() {
     }
     return <section className={"home-section"}>
         {message}
-        {AdminSidebar({img: user?.logo_uri, fio: user?.fio})}
+        {Sidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
         <section className={"homepage-section"}>
             <header className={"line"} style={{justifyContent: "space-between"}}>
@@ -71,24 +71,29 @@ export default function Homepage() {
                             </div>
                         </h2>
                         <div className={"line"} style={{color: "white"}}>
-                            {XlHeader(DATE.getDate().toString(), undefined)}
-                            {XlHeader("." + (+DATE.getMonth() + 1).toString(), undefined)}
+                            {XlHeader(
+                                DATE.getDate() < 10 ? "0" + DATE.getDate().toString() : DATE.getDate().toString(),
+                                undefined)}
+                            {XlHeader("." + ((DATE.getMonth() + 1) < 10 ? "0" + (DATE.getMonth() + 1).toString() : (DATE.getMonth() + 1).toString()),
+                                undefined)}
                             {XlHeader("." + DATE.getFullYear().toString(), undefined)}
                         </div>
 
                     </article>
                 </div>
             </header>
-            <article className={"full-width-window-homepage"}>
-                <header className={"line"}>
-                    {XlHeader("Ближайшие дни", {color: "white"})}
-                    {Space()}
-                    {XlHeaderColored("рождения:")}
-                </header>
-                <data>
+            {user?.role === "COACH" || user?.role === "ADMIN" &&
+                <article className={"full-width-window-homepage"}>
+                    <header className={"line"}>
+                        {XlHeader("Ближайшие дни", {color: "white"})}
+                        {Space()}
+                        {XlHeaderColored("рождения:")}
+                    </header>
+                    <data>
 
-                </data>
-            </article>
+                    </data>
+                </article>
+            }
             <article className={"full-width-window-homepage"}>
                 <header className={"line"}>
                     {XlHeader("Предстоящие", {color: "white"})}

@@ -1,9 +1,7 @@
 // @ts-ignore
-import AdminSidebar from "../blocks/side-menu/Admin-sidebar.tsx";
-// @ts-ignore
 import Notifications from "../blocks/Notifications.tsx";
 // @ts-ignore
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 // @ts-ignore
 import authValid from "../../../domain/app/auth-check.ts";
 // @ts-ignore
@@ -34,6 +32,14 @@ import isAdminValid, {isCoachValid, isPupilValid} from "../../../domain/app/vali
 import DialogWindow from "../dialog/Dialog-window.tsx";
 // @ts-ignore
 import NewAdmin from "../../../domain/http/users/new-admin.ts";
+// @ts-ignore
+import NewCoach from "../../../domain/http/users/new-coach.ts";
+// @ts-ignore
+import BuildDialogNewUser from "../../../domain/app/dialog-building/build-dialog-new-user.tsx";
+// @ts-ignore
+import NewPupil from "../../../domain/http/users/new-pupil.ts";
+// @ts-ignore
+import Sidebar from "../blocks/side-menu/Sidebar.tsx";
 
 export default function CreateUser() {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -60,15 +66,21 @@ export default function CreateUser() {
                 ...prevState, role: "ADMIN"
             })
         )
+        localStorage.getItem("role") === "COACH" && setNewUser(
+            prevState => ({
+                ...prevState, role: "PUPIL", coach: localStorage.getItem("key")
+            })
+        )
         setDataPreloaded(true)
     }
     return <section className={"home-section"}>
         {message}
-        {AdminSidebar({img: user?.logo_uri, fio: user?.fio})}
+        {Sidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
         {dialogWindow}
-        {user?.role === "ADMIN" ?
-            <section className={"homepage-section"} style={{alignItems: "center", width: 900, maxWidth: "95%"}}>
+        {user?.role === "ADMIN" || user?.role === "COACH" ?
+            <section className={"homepage-section"}
+                     style={{alignItems: "center", width: 900, maxWidth: "95%", marginBottom: 15}}>
                 <header className={"line"} style={{justifyContent: "space-between", width: "100%"}}>
                     <div className={"greeting-header-home line"} style={{width: "auto"}}>
                         {XlHeaderColored("Создание")}
@@ -78,7 +90,7 @@ export default function CreateUser() {
                 </header>
                 <article
                     className={"full-width-window-homepage"}
-                    style={{width: 800, maxWidth: "100%"}}>
+                    style={{width: 800, maxWidth: "95%"}}>
                     <header
                         className={"line"}
                         style={{marginBlock: 15}}
@@ -96,7 +108,7 @@ export default function CreateUser() {
                                         prevState => ({
                                             ...prevState, role: e.target.value
                                         }))
-                                    e.target.value === "COACH" && PreloadListCoaches().then(r => {
+                                    e.target.value === "PUPIL" && user?.role === "ADMIN" && PreloadListCoaches().then(r => {
                                         if (r.error) {
                                             setMessage(Message("ERROR", r.message))
                                             setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
@@ -108,9 +120,14 @@ export default function CreateUser() {
                                     })
                                 }}
                             >
-                                <option value="ADMIN">Администратор</option>
-                                <option value="COACH">Тренер</option>
-                                <option value="PUPIL">Ученица</option>
+                                {user?.role === "ADMIN" && <React.Fragment>
+                                    <option value="ADMIN">Администратор</option>
+                                    <option value="COACH">Тренер</option>
+                                    <option value="PUPIL">Ученица</option>
+                                </React.Fragment>}
+                                {user?.role === "COACH" && <React.Fragment>
+                                    <option value="PUPIL" selected={true} disabled={true}>Ученица</option>
+                                </React.Fragment>}
                             </select>
                         </span>
                         <span className={"col"}>
@@ -118,7 +135,7 @@ export default function CreateUser() {
                             <input
                                 className={"input-translucent"}
                                 placeholder={"Иванов Иван Иванович"}
-                                style={{width: 300, maxWidth: "95%"}}
+                                style={{width: 300, maxWidth: "75%"}}
                                 onChange={e => setNewUser(
                                     prevState => ({
                                         ...prevState, fio: e.target.value
@@ -131,7 +148,7 @@ export default function CreateUser() {
                 {newUser?.role !== "ADMIN" &&
                     <article
                         className={"full-width-window-homepage"}
-                        style={{width: 800, maxWidth: "100%"}}>
+                        style={{width: 800, maxWidth: "95%"}}>
                         <header
                             className={"line"}
                             style={{marginBlock: 15}}
@@ -147,7 +164,8 @@ export default function CreateUser() {
                                 }}>Город</label>
                                 <input
                                     className={"input-translucent"}
-                                    placeholder={"Москва"}
+                                    style={{marginInline: 3}}
+                                    placeholder={"Например, Москва"}
                                     onChange={e => setNewUser(
                                         prevState => ({
                                             ...prevState, home_city: e.target.value
@@ -163,7 +181,8 @@ export default function CreateUser() {
                                 }}>Место тренировок</label>
                                 <input
                                     className={"input-translucent"}
-                                    placeholder={"Москва"}
+                                    style={{marginInline: 3}}
+                                    placeholder={"Например, Москва"}
                                     onChange={e => setNewUser(
                                         prevState => ({
                                             ...prevState, training_city: e.target.value
@@ -190,7 +209,8 @@ export default function CreateUser() {
                             {newUser?.role === "PUPIL" && <span className={"col"}>
                                 <label style={{
                                     color: "white",
-                                    textAlign: "left"
+                                    textAlign: "left",
+                                    marginBottom: user?.role === "COACH" && -10
                                 }}>
                                     {// @ts-ignore
                                         user?.role === "COACH" ? "Тренер (вы)" : "Тренер"
@@ -199,11 +219,15 @@ export default function CreateUser() {
                                 {user?.role === "ADMIN" ? <select
                                     className={"input-translucent"}
                                     style={{padding: "7px 12px", marginBottom: 12}}
-                                    onChange={e => setNewUser(
-                                        prevState => ({
-                                            ...prevState, coach: e.target.value
-                                        }))
+                                    onChange={e => {
+                                        console.log(e.target.value)
+                                        setNewUser(
+                                            prevState => ({
+                                                ...prevState, coach: e.target.value
+                                            }))
+                                    }
                                     }>
+                                    <option selected={true} disabled={true}>Выберете тренера</option>
                                     {shortCoachList?.map(coach => {
                                         let fi = coach?.fio.split(" ")
                                         return <option value={coach?.key}>
@@ -218,7 +242,7 @@ export default function CreateUser() {
                             </span>}
                             <textarea
                                 className={"input-translucent"}
-                                style={{width: 280, maxWidth: "95%"}}
+                                style={{width: 280, maxWidth: "95%", marginBlock: 5}}
                                 rows={5}
                                 placeholder={"О себе"}
                                 onChange={e => setNewUser(
@@ -231,7 +255,7 @@ export default function CreateUser() {
                                 newUser?.role === "PUPIL" &&
                                 <textarea
                                     className={"input-translucent"}
-                                    style={{width: 280, maxWidth: "95%"}}
+                                    style={{width: 280, maxWidth: "95%", marginBlock: 5}}
                                     rows={5}
                                     placeholder={"Комментарий от тренера"}
                                     onChange={e => setNewUser(
@@ -253,42 +277,13 @@ export default function CreateUser() {
                         onClick={() => {
                             switch (newUser?.role) {
                                 case "ADMIN":
-                                    if (isAdminValid(newUser as newCoachModel)) {
+                                    if (isAdminValid(newUser as newAdminModel)) {
                                         NewAdmin(newUser?.fio).then(r => {
                                             if (r.error) {
                                                 setMessage(Message("ERROR", r.text))
                                                 setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
                                             } else {
-                                                setDialogWindow(DialogWindow("Пользователь создан", <article
-                                                    className={"col-center"}>
-                                                    {Space()}
-                                                    <p>
-                                                        ID Пользователя: {r?.data?.key}
-                                                    </p>
-                                                    <p>
-                                                        Пароль: {r?.data?.private?.checksum}
-                                                    </p>
-                                                    <p className={"subtext"} style={{textAlign: "center"}}>
-                                                        Скопируйте эти данные и вышлите конечному пользователю
-                                                    </p>
-                                                    {Space()}
-                                                    <footer className={"line"}>
-                                                        <button
-                                                            className={"button-basic"}
-                                                            onClick={() => {
-                                                                navigator.clipboard.writeText(`${r?.data?.key}\n${r?.data?.private?.checksum}`)
-                                                            }}>
-                                                            Скопировать данные
-                                                        </button>
-                                                        <button
-                                                            className={"button-basic"}
-                                                            onClick={() => {
-                                                                setDialogWindow(<React.Fragment></React.Fragment>)
-                                                            }}>
-                                                            Закрыть
-                                                        </button>
-                                                    </footer>
-                                                </article>))
+                                                setDialogWindow(DialogWindow("Пользователь создан", BuildDialogNewUser(r?.data?.fio, r?.data?.key, r?.data?.private?.checksum)))
                                             }
                                         })
                                     } else {
@@ -298,7 +293,14 @@ export default function CreateUser() {
                                     break
                                 case "COACH":
                                     if (isCoachValid(newUser as newCoachModel)) {
-
+                                        NewCoach(newUser as newCoachModel).then(r => {
+                                            if (r.error) {
+                                                setMessage(Message("ERROR", r.text))
+                                                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                            } else {
+                                                setDialogWindow(DialogWindow("Пользователь создан", BuildDialogNewUser(r?.data?.fio, r?.data?.key, r?.data?.private?.checksum)))
+                                            }
+                                        })
                                     } else {
                                         setMessage(Message("ERROR", "Неверно заполнены поля"))
                                         setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
@@ -306,7 +308,14 @@ export default function CreateUser() {
                                     break
                                 case "PUPIL":
                                     if (isPupilValid(newUser as newPupilModel)) {
-                                        // http request
+                                        NewPupil(newUser as newPupilModel).then(r => {
+                                            if (r.error) {
+                                                setMessage(Message("ERROR", r.text))
+                                                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                            } else {
+                                                setDialogWindow(DialogWindow("Пользователь создан", BuildDialogNewUser(r?.data?.fio, r?.data?.key, r?.data?.private?.checksum)))
+                                            }
+                                        })
                                     } else {
                                         setMessage(Message("ERROR", "Неверно заполнены поля"))
                                         setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)

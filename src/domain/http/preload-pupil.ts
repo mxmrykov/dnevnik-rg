@@ -9,13 +9,8 @@ import axios from "axios";
 
 export default async function PreloadPupil():
     Promise<{ error: boolean, message: string, user: pupilModel }> {
-    if (!
-        (localStorage.getItem("role") === "PUPIL")
-    ) return Promise.resolve(
-        {error: true, message: "Роль пользователя не совпадает для запроса", user: null}
-    )
     return await constants.instance.get<PreloadPupilResponse>(
-        "/users/pupil/get",
+        "/users/pupil/get?pupilId=" + localStorage.getItem("key"),
         {
             headers: {
                 "X-User-Id": localStorage.getItem("key"),
