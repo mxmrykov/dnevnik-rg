@@ -1,21 +1,20 @@
 // @ts-ignore
-import * as constants from "../constants/api.ts"
-
+import {pupilListModel} from "../../constants/users-models.ts";
 // @ts-ignore
-import {coachModel} from "../constants/users-models.ts";
+import * as constants from "../../constants/api.ts";
 // @ts-ignore
-import {PreloadCoachResponse} from "../constants/response.ts";
+import {PreloadPupilList} from "../../constants/response.ts";
 import axios from "axios";
 
-export default async function PreloadCoach():
-    Promise<{ error: boolean, message: string, user: coachModel }> {
+export default function PreloadCoachPupils():
+    Promise<{ error: boolean, message: string, user: pupilListModel[] }> {
     if (!
-        (localStorage.getItem("role") === "COACH")
+        (localStorage.getItem("role") === "ADMIN" || localStorage.getItem("role") === "COACH")
     ) return Promise.resolve(
         {error: true, message: "Роль пользователя не совпадает для запроса", user: null}
     )
-    return await constants.instance.get<PreloadCoachResponse>(
-        "/users/coach/get?coachId=" + localStorage.getItem("key"),
+    return constants.instance.get<PreloadPupilList>(
+        "/users/coach/pupils?coachId=" + localStorage.getItem("key"),
         {
             headers: {
                 "X-User-Id": localStorage.getItem("key"),

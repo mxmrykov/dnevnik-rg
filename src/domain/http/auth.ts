@@ -12,10 +12,10 @@ type AuthResponse = {
     Message: string;
     IsError: boolean;
 }
-export default function Authorize(user: { xUserId: string; password: string; }):
+export default async function Authorize(user: { xUserId: string; password: string; }):
     Promise<{ error: boolean, text: string }> {
     let xUserId = user.xUserId, checksum = user.password
-    return constants.instance.post<AuthResponse>(
+    return await constants.instance.post<AuthResponse>(
         "/auth",
         {
             checksum: checksum
@@ -32,9 +32,9 @@ export default function Authorize(user: { xUserId: string; password: string; }):
         return {error: false, text: "Данные получены"};
     }).catch(error => {
         if (axios.isAxiosError(error)) {
-            if (error.response?.status == 401) {
+            if (error.response?.status === 401) {
                 return {error: true, text: "Неверные данные для входа"};
-            } else if (error.response?.status == 400) {
+            } else if (error.response?.status === 400) {
                 return {error: true, text: "Заполните поля правильно"};
             } else return {error: true, text: "Ошибка запроса"};
         } else {

@@ -3,13 +3,14 @@ import {IoHomeOutline, IoCalendarClearOutline} from "react-icons/io5";
 // @ts-ignore
 import React, {useState} from "react";
 import {GoHistory} from "react-icons/go";
-import {FiUsers} from "react-icons/fi";
-import { IoAnalyticsOutline } from "react-icons/io5";
+import { GiWhistle } from "react-icons/gi";
+import {MdOutlineManageAccounts} from "react-icons/md";
 import {IoMenuOutline} from "react-icons/io5";
+import { IoInformationCircleOutline } from "react-icons/io5";
 // @ts-ignore
 import exit from "../../../../domain/app/exit.ts";
 
-export default function CoachSidebar(props: { img: string, fio: string }): React.JSX.Element {
+export default function PupilSidebar(props: { img: string, fio: string }): React.JSX.Element {
     const [menuActive, setMenuActive] = useState<boolean>(false)
     return <section>
         <nav className={`side-menu col ${menuActive && "side-active"}`}>
@@ -22,7 +23,7 @@ export default function CoachSidebar(props: { img: string, fio: string }): React
                     <img alt={"mini profile"} className={"image-s-m"} style={{marginInline: 10}} src={props?.img}/>
                     <aside className={"col"} style={{alignItems: "start"}}>
                         <h3>{props?.fio?.split(" ")[1]}</h3>
-                        <p>Тренер</p>
+                        <p>Ученица</p>
                     </aside>
                 </div>
                 <hr style={{width: "100%"}} color={"grey"}/>
@@ -50,15 +51,21 @@ export default function CoachSidebar(props: { img: string, fio: string }): React
                     </a>
                 </li>
                 <li>
-                    <a href={"/analytics"} className={"line"}>
-                        <IoAnalyticsOutline size={25} style={{marginInline: 5}}/>
-                        Аналитика
+                    <a href={"/statistic"} className={"line"}>
+                        <MdOutlineManageAccounts size={25} style={{marginInline: 5}}/>
+                        Статистика
                     </a>
                 </li>
                 <li>
-                    <a href={"/users"} className={"line"}>
-                        <FiUsers size={25} style={{marginInline: 5}}/>
-                        Ученицы
+                    <a href={"/my-coach"} className={"line"}>
+                        <GiWhistle size={25} style={{marginInline: 5}}/>
+                        Тренер
+                    </a>
+                </li>
+                <li>
+                    <a href={"/info"} className={"line"}>
+                        <IoInformationCircleOutline size={25} style={{marginInline: 5}}/>
+                        Информация
                     </a>
                 </li>
             </ul>

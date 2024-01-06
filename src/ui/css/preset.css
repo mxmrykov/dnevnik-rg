@@ -11,6 +11,23 @@ html, body {
     outline: none;
     scroll-behavior: smooth;
     transition: 0.2s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--base-property-colored);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    padding: 1px;
+    backdrop-filter: blur(3px);
 }
 
 ul {
@@ -37,4 +54,11 @@ button:hover {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+textarea {
+    resize: none;
+    border-radius: var(--base-border-radius);
+    padding: var(--base-box-padding);
+    font-size: 0.9rem;
 }
