@@ -1,6 +1,9 @@
-import {pupilsBdays} from "../../constants/users-models";
-import * as constants from "../../constants/api";
-import {getPupilsNearestBdayList, PreloadAdminResponse} from "../../constants/response";
+// @ts-ignore
+import {pupilsBdays} from "../../constants/users-models.ts";
+// @ts-ignore
+import * as constants from "../../constants/api.ts";
+// @ts-ignore
+import {getPupilsNearestBdayList} from "../../constants/response.ts";
 import axios from "axios";
 
 export default async function GetNearestBdays():
@@ -19,7 +22,6 @@ export default async function GetNearestBdays():
                 Authorization: localStorage.getItem("token")
             }
         }
-
     ).then(response => {
         return {error: false, message: response.data.message, bdayList: response.data.data}
     }).catch(error => {
