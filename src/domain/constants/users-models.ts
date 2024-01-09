@@ -129,3 +129,9 @@ export type newPupilModel = {
     about: string;
     coach_review: string;
 }
+
+export type pupilsBdays = {
+    fio: string;
+    key: number;
+    birthday: string;
+}

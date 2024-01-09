@@ -5,7 +5,7 @@ import {
     coachListModel,
     coachModel, pupilFullModel,
     pupilListModel,
-    pupilModel
+    pupilModel, pupilsBdays
 } from "./users-models";
 
 export type PreloadPupilResponse = {
@@ -20,6 +20,7 @@ export type PreloadCoachResponse = {
     message: string;
     isError: boolean;
 }
+
 export type PreloadAdminResponse = {
     data: adminModel
     status_code: number;
@@ -63,6 +64,12 @@ export type getFullCoachResponse = {
 }
 export type getFullPupilResponse = {
     data: pupilFullModel,
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+export type getPupilsNearestBdayList = {
+    data: pupilsBdays[],
     status_code: number;
     message: string;
     isError: boolean;
