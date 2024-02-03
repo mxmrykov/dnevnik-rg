@@ -15,6 +15,11 @@ html, body {
     -moz-appearance: none;
 }
 
+input[type=checkbox] {
+    -webkit-appearance: checkbox;
+    -moz-appearance: checkbox;
+}
+
 ::-webkit-scrollbar {
     width: 7px;
 }
