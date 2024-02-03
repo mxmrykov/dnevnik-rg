@@ -90,7 +90,6 @@ export default function Homepage() {
                                 undefined)}
                             {XlHeader("." + DATE.getFullYear().toString(), undefined)}
                         </div>
-
                     </article>
                 </div>
             </header>

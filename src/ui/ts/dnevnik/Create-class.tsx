@@ -31,6 +31,12 @@ import PreloadListCoaches from "../../../domain/http/preload-lists/preload-list-
 import PreloadCoachPupils from "../../../domain/http/preload-lists/preload-coach-pupils.ts";
 // @ts-ignore
 import PreloadListPupils from "../../../domain/http/preload-lists/preload-list-pupils.ts";
+// @ts-ignore
+import getStringDate from "../../../domain/app/validations/get-string-date.ts";
+// @ts-ignore
+import GetCoachSchedule from "../../../domain/http/coach-schedule.ts";
+// @ts-ignore
+import {timeAvailability, timeSlotExtended} from "../../../domain/constants/sub-objects.ts";
 
 export default function CreateClass(): React.JSX.Element {
 
@@ -39,12 +45,18 @@ export default function CreateClass(): React.JSX.Element {
     const [newClassType, setNewClassType] = useState<string>()
     const [newClassCoach, setNewClassCoach] = useState<number>()
     const [newMultipleClassNumber, setNewMultipleClassNumber] = useState<number>(0)
+    const [newClassDate, setNewClassDate] = useState<string>(getStringDate())
+    const [newClassTime, setNewClassTime] = useState<string>("")
+    const [coachSchedule, setCoachSchedule] = useState<timeSlotExtended[]>()
+    const [coachScheduleIndexed, setCoachScheduleIndexed] = useState<timeAvailability[]>()
 
     const [shortCoachList, setShortCoachList] = useState<coachListModel[]>()
     const [shortPupilList, setShortPupilList] = useState<pupilListModel[]>()
 
     const [message, setMessage] = useState<React.JSX.Element>(<React.Fragment></React.Fragment>)
     const [dataPreloaded, setDataPreloaded] = useState<boolean>(false)
+
+    const DATE = new Date()
 
     if (!dataPreloaded) {
         if (!authValid()) exit()
@@ -176,6 +188,24 @@ export default function CreateClass(): React.JSX.Element {
                                     style={{padding: "7px 12px", marginBottom: 12}}
                                     onChange={e => {
                                         setNewClassCoach(Number(e.target.value))
+                                        GetCoachSchedule(Number(e.target.value), newClassDate)?.then(r => {
+                                            if (r.error) {
+                                                setMessage(Message("ERROR", r.message))
+                                                setTimeout(() => setMessage(
+                                                    <React.Fragment></React.Fragment>), 5100)
+                                            } else {
+                                                setCoachSchedule(
+                                                    Object.keys(r?.schedule).map(key => ({
+                                                        time: key,
+                                                        ...r.schedule[key]
+                                                    }))
+                                                )
+                                                setCoachScheduleIndexed(r?.schedule)
+                                                setTimeout(() => setMessage(
+                                                    <React.Fragment></React.Fragment>), 5100)
+                                                setMessage(Message("SUCCESS", r.message))
+                                            }
+                                        })
                                     }
                                     }>
                                     <option selected={true} disabled={true}>Выберете тренера</option>
@@ -236,7 +266,7 @@ export default function CreateClass(): React.JSX.Element {
                                     <data className={"col"}>
                                         <select
                                             className={"input-translucent"}
-                                            style={{padding: "7px 12px", marginBottom: 5}}
+                                            style={{padding: "7px 12px", marginBottom: 12}}
                                         >
                                             <option selected={true} disabled={true}>Ученица</option>
                                             {shortPupilList?.map((p, i) => {
@@ -250,6 +280,136 @@ export default function CreateClass(): React.JSX.Element {
                                         </select>
                                     </data>
                             </span>
+                            }
+                            {
+                                <span className={"col"}>
+                                    <label style={{
+                                        color: "white",
+                                        textAlign: "left",
+                                        marginBottom: 10
+                                    }}>
+                                        Дата
+                                    </label>
+                                    <input
+                                        onChange={e => {
+                                            setNewClassDate(e.target.value)
+                                            newClassCoach !== 0 && GetCoachSchedule(newClassCoach, e.target.value)?.then(r => {
+                                                if (r.error) {
+                                                    setMessage(Message("ERROR", r.message))
+                                                    setTimeout(() => setMessage(
+                                                        <React.Fragment></React.Fragment>), 5100)
+                                                } else {
+                                                    setCoachSchedule(
+                                                        Object.keys(r?.schedule).map(key => ({
+                                                            time: key,
+                                                            ...r.schedule[key]
+                                                        }))
+                                                    )
+                                                    setCoachScheduleIndexed(r?.schedule)
+                                                    setTimeout(() => setMessage(
+                                                        <React.Fragment></React.Fragment>), 5100)
+                                                    setMessage(Message("SUCCESS", r.message))
+                                                }
+                                            })
+                                        }}
+                                        className={"input-translucent"}
+                                        style={{
+                                            padding: "7px 12px",
+                                            margin: 0,
+                                            marginBottom: 12
+                                        }}
+                                        type={"date"}
+                                        min={getStringDate()}
+                                        value={newClassDate}
+                                    />
+                                </span>
+                            }
+                            {newClassCoach !== 0 &&
+                                <span className={"col"}>
+                                    <label style={{
+                                        color: "white",
+                                        textAlign: "left",
+                                        marginBottom: 10
+                                    }}>
+                                    Время
+                                    </label>
+                                        <select
+                                            className={"input-translucent"}
+                                            style={{padding: "7px 12px", marginBottom: 12}}
+                                            onChange={e => {
+                                                setNewClassTime(e.target.value)
+                                            }}
+                                        >
+                                            <option disabled={true} selected={true}>
+                                                Время
+                                            </option>
+                                            {
+                                                coachSchedule?.map((time: timeSlotExtended, index: number) => {
+                                                    return <option
+                                                        key={index}
+                                                        value={time.time}
+                                                        disabled={!time.general}
+                                                    >
+                                                        {time.time}
+                                                    </option>
+                                                })
+                                            }
+                                        </select>
+                                </span>
+                            }
+                            {
+                                newClassTime !== "" &&
+                                <span className={"col"}>
+                                    <label style={{
+                                        color: "white",
+                                        textAlign: "left",
+                                        marginBottom: 10
+                                    }}>
+                                    Длительность
+                                    </label>
+                                        <select
+                                            className={"input-translucent"}
+                                            style={{padding: "7px 12px", marginBottom: 12}}
+                                            onChange={e => {
+                                                console.log(coachScheduleIndexed)
+                                                console.log(newClassTime)
+                                            }}
+                                        >
+                                            <option disabled={true} selected={true}>
+                                                Длительность
+                                            </option>
+                                            <option
+                                                value="00:30"
+                                                disabled={!coachScheduleIndexed[newClassTime]?.half_hour_free}
+                                            >
+                                                00:30
+                                            </option>
+                                            <option
+                                                value="01:00"
+                                                disabled={!coachScheduleIndexed[newClassTime]?.hour_free}
+                                            >
+                                                01:00
+                                            </option>
+                                            <option
+                                                value="01:30"
+                                                disabled={!coachScheduleIndexed[newClassTime]?.one_half_hour_free}
+                                            >
+                                                01:30
+                                            </option>
+                                            <option
+                                                value="02:00"
+                                                disabled={!coachScheduleIndexed[newClassTime]?.two_hour_free}
+                                            >
+                                                02:00
+                                            </option>
+                                            <option
+                                                value="02:30"
+                                                disabled={!coachScheduleIndexed[newClassTime]?.two_half_hour_free}
+                                            >
+                                                02:30
+                                            </option>
+                                        </select>
+                                </span>
                             }
                         </div>
                     </article>

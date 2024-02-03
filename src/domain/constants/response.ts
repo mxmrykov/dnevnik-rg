@@ -7,6 +7,7 @@ import {
     pupilListModel,
     pupilModel, pupilsBdays
 } from "./users-models";
+import {timeAvailability} from "./sub-objects";
 
 export type PreloadPupilResponse = {
     data: pupilModel
@@ -70,6 +71,12 @@ export type getFullPupilResponse = {
 }
 export type getPupilsNearestBdayList = {
     data: pupilsBdays[],
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+export type getCoachSchedule = {
+    data: timeAvailability[],
     status_code: number;
     message: string;
     isError: boolean;
