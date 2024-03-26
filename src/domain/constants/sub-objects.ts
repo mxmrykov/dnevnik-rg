@@ -21,3 +21,7 @@ export type timeSlotExtended = {
     two_half_hour_free: boolean
     three_hour_free: boolean
 }
+export type coachMapForNewClass = {
+    fi: string,
+    key: number
+}

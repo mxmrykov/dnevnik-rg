@@ -81,3 +81,10 @@ export type getCoachSchedule = {
     message: string;
     isError: boolean;
 }
+
+export type CreateClassResponse = {
+    data: number,
+    status_code: number;
+    message: string;
+    isError: boolean;
+}

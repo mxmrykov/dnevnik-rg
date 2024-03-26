@@ -36,25 +36,46 @@ import getStringDate from "../../../domain/app/validations/get-string-date.ts";
 // @ts-ignore
 import GetCoachSchedule from "../../../domain/http/coach-schedule.ts";
 // @ts-ignore
-import {timeAvailability, timeSlotExtended} from "../../../domain/constants/sub-objects.ts";
+import {coachMapForNewClass, timeAvailability, timeSlotExtended} from "../../../domain/constants/sub-objects.ts";
+// @ts-ignore
+import createClass from "../../../domain/http/classes/create-class.ts";
+// @ts-ignore
+import {Class} from "../../../domain/constants/class.ts";
+// @ts-ignore
+import DialogWindow from "../dialog/Dialog-window.tsx";
+// @ts-ignore
+import BuildDialogNewUser from "../../../domain/app/dialog-building/build-dialog-new-class.tsx";
 
 export default function CreateClass(): React.JSX.Element {
 
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
 
     const [newClassType, setNewClassType] = useState<string>()
-    const [newClassCoach, setNewClassCoach] = useState<number>()
+    const [newClassCoach, setNewClassCoach] = useState<number>(0)
     const [newMultipleClassNumber, setNewMultipleClassNumber] = useState<number>(0)
     const [newClassDate, setNewClassDate] = useState<string>(getStringDate())
     const [newClassTime, setNewClassTime] = useState<string>("")
+    const [newClassDuration, setNewClassDuration] = useState<string>("")
     const [coachSchedule, setCoachSchedule] = useState<timeSlotExtended[]>()
     const [coachScheduleIndexed, setCoachScheduleIndexed] = useState<timeAvailability[]>()
+    const [pupils, setPupils] = useState<number[]>([])
+    const [isOpenToSIgnUp, setOpenToSignUp] = useState<boolean>()
 
     const [shortCoachList, setShortCoachList] = useState<coachListModel[]>()
     const [shortPupilList, setShortPupilList] = useState<pupilListModel[]>()
 
     const [message, setMessage] = useState<React.JSX.Element>(<React.Fragment></React.Fragment>)
+    const [dialogWindow, setDialogWindow] = useState<React.JSX.Element>()
     const [dataPreloaded, setDataPreloaded] = useState<boolean>(false)
+
+
+    const prices = {
+        "00:30": 1600,
+        "01:00": 3200,
+        "01:30": 4800,
+        "02:00": 6400,
+        "02:30": 8000,
+    }
 
     const DATE = new Date()
 
@@ -99,6 +120,7 @@ export default function CreateClass(): React.JSX.Element {
         {message}
         {Sidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
+        {dialogWindow}
         <section className={"homepage-section"}>
             <section className={"homepage-section"}
                      style={{alignItems: "center", width: 900, maxWidth: "95%", marginBottom: 15}}>
@@ -114,7 +136,7 @@ export default function CreateClass(): React.JSX.Element {
                     style={{width: 800, maxWidth: "95%"}}>
                     <header
                         className={"line"}
-                        style={{marginBlock: 15}}
+                        style={{margin: 15}}
                     >
                         {XlHeader("Основная информация", {color: "white"})}
                     </header>
@@ -128,6 +150,7 @@ export default function CreateClass(): React.JSX.Element {
                                 className={"input-translucent"}
                                 style={{padding: "7px 12px"}}
                                 onChange={e => {
+                                    setPupils([])
                                     setNewClassType(e.target.value)
                                 }}
                             >
@@ -144,6 +167,7 @@ export default function CreateClass(): React.JSX.Element {
                                 style={{padding: "7px 12px"}}
                                 onChange={e => {
                                     setNewMultipleClassNumber(Number(e.target.value))
+                                    setPupils(pupils.splice(Number(e.target.value)))
                                 }}
                             >
                                     <option disabled={true} selected={true}>Количество учениц</option>
@@ -168,7 +192,7 @@ export default function CreateClass(): React.JSX.Element {
                         style={{width: 800, maxWidth: "95%"}}>
                         <header
                             className={"line"}
-                            style={{marginBlock: 15}}
+                            style={{margin: 15}}
                         >
                             {XlHeader("Детали", {color: "white"})}
                         </header>
@@ -237,12 +261,19 @@ export default function CreateClass(): React.JSX.Element {
                                                 return <select
                                                     className={"input-translucent"}
                                                     style={{padding: "7px 12px", marginBottom: 5}}
-                                                    key={num}>
-                                                    <option selected={true} disabled={true}>Ученица</option>
+                                                    key={num}
+                                                    onChange={e => {
+                                                        setPupils(prev => [
+                                                            ...prev,
+                                                            Number(e.target.value.split("-")[0])
+                                                        ])
+                                                    }}>
+                                                    <option selected={true} value={0}>Ученица</option>
                                                     {shortPupilList?.map((p, i) => {
                                                         return <option
+                                                            disabled={pupils.indexOf(p?.key, 0) > -1}
                                                             key={i}
-                                                            value={p?.fio}
+                                                            value={p?.key}
                                                         >
                                                             {p?.fio}
                                                         </option>
@@ -267,12 +298,17 @@ export default function CreateClass(): React.JSX.Element {
                                         <select
                                             className={"input-translucent"}
                                             style={{padding: "7px 12px", marginBottom: 12}}
+                                            onChange={e => {
+                                                setPupils([
+                                                    Number(e.target.value)
+                                                ])
+                                            }}
                                         >
                                             <option selected={true} disabled={true}>Ученица</option>
                                             {shortPupilList?.map((p, i) => {
                                                 return <option
                                                     key={i}
-                                                    value={p?.fio}
+                                                    value={p?.key}
                                                 >
                                                     {p?.fio}
                                                 </option>
@@ -345,6 +381,7 @@ export default function CreateClass(): React.JSX.Element {
                                             </option>
                                             {
                                                 coachSchedule?.map((time: timeSlotExtended, index: number) => {
+                                                    console.log(time)
                                                     return <option
                                                         key={index}
                                                         value={time.time}
@@ -371,8 +408,7 @@ export default function CreateClass(): React.JSX.Element {
                                             className={"input-translucent"}
                                             style={{padding: "7px 12px", marginBottom: 12}}
                                             onChange={e => {
-                                                console.log(coachScheduleIndexed)
-                                                console.log(newClassTime)
+                                                setNewClassDuration(e.target.value)
                                             }}
                                         >
                                             <option disabled={true} selected={true}>
@@ -412,6 +448,87 @@ export default function CreateClass(): React.JSX.Element {
                                 </span>
                             }
                         </div>
+                        <footer style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginBlock: 20
+                        }}>
+                            {newClassType === "multiple" && <span
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-around",
+                                    color: "white"
+                                }}
+                            >
+                                <input
+                                    type={"checkbox"}
+                                    onChange={() => setOpenToSignUp(!isOpenToSIgnUp)}
+                                    id={"isOpenToSignUp"}
+                                />
+                                <label
+                                    // @ts-ignore
+                                    for="isOpenToSignUp"
+                                    style={{
+                                        userSelect: "none",
+                                        fontSize: "0.9rem"
+                                    }}>
+                                  Открыто для записи
+                                </label>
+                            </span>}
+                            {
+                                (newClassCoach > 0
+                                    && (
+                                        (newClassType === "single" && pupils.length === 1) ||
+                                        (newClassType === "multiple" && pupils.length === newMultipleClassNumber) ||
+                                        (newClassType === "multiple" && isOpenToSIgnUp)
+                                    )
+                                    && newClassDate !== "" && newClassTime !== "" && newClassDuration !== "")
+                                && <button
+                                    className={"button-basic"}
+                                    onClick={() => {
+                                        console.log(prices + " " + prices["00:30"] + " " + prices[newClassDuration])
+                                        let cl: Class = {
+                                            pupils: pupils,
+                                            coach: newClassCoach,
+                                            capacity: newMultipleClassNumber,
+                                            classDate: newClassDate,
+                                            classTime: newClassTime,
+                                            duration: newClassDuration,
+                                            price: prices[newClassDuration],
+                                            classType: newClassType,
+                                            isOpen: isOpenToSIgnUp
+                                        }
+                                        createClass(cl).then(r => {
+                                            if (r.error) {
+                                                setMessage(Message("ERROR", r.text))
+                                                setTimeout(() => setMessage(
+                                                    <React.Fragment></React.Fragment>), 5100)
+                                            } else {
+                                                let textCoach: string
+                                                shortCoachList?.map(coach => {
+                                                    if (coach?.key === newClassCoach) {
+                                                        let fi = coach?.fio.split(" ")
+                                                        textCoach = fi[0] + " " + fi[1]
+                                                    }
+                                                })
+                                                setDialogWindow(DialogWindow("Занятие создано",
+                                                    BuildDialogNewUser(
+                                                        textCoach,
+                                                        newClassDate,
+                                                        newClassTime,
+                                                        newClassDuration,
+                                                        isOpenToSIgnUp,
+                                                        r.data
+                                                    )))
+                                            }
+                                        })
+                                    }}>
+                                    Создать
+                                </button>}
+                        </footer>
                     </article>
                 }
             </section>
