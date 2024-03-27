@@ -30,6 +30,7 @@ export default async function
         return {error: false, text: "Данные получены", data: response.data.data};
     }).catch(error => {
         if (axios.isAxiosError(error)) {
+            if (error.code === "ERR_NETWORK") return {error: true, text: "Ошибка получения данных с сервера", data: undefined};
             if (error.response?.status === 401) {
                 return {error: true, text: "Неверные данные для входа", data: undefined};
             } else if (error.response?.status === 400) {

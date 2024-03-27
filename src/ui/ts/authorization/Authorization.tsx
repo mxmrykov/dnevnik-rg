@@ -35,18 +35,22 @@ export default function Authorization() {
                            onChange={(e) => setXUserId(e.target.value)}/>
                     <input className={"input-translucent"} placeholder={"Ваш пароль"} value={password} type="text"
                            onChange={(e) => setPassword(e.target.value)}/>
-                    <button onClick={() => {
-                        Authorize({xUserId, password})
-                            .then((result) => {
-                                if (result.error) {
-                                    setMessage(Message("ERROR", result.text))
-                                    setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
-                                } else {
-                                    setMessage(Message("SUCCESS", result.text))
-                                    setTimeout(() => window.location.href = "/home")
-                                }
-                            })
-                    }} className={"button-basic"} style={{marginBlock: 12}}>
+                    <button
+                        className={"button-basic"}
+                        style={{marginBlock: 12}}
+                        onClick={() => {
+                            Authorize({xUserId, password})
+                                .then((result) => {
+                                    if (result.error) {
+                                        setMessage(Message("ERROR", result.text))
+                                        setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                                    } else {
+                                        setMessage(Message("SUCCESS", result.text))
+                                        setTimeout(() => window.location.href = "/home")
+                                    }
+                                })
+                        }}
+                    >
                         Войти
                     </button>
                 </article>

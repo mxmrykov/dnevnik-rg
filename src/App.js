@@ -3,7 +3,7 @@ import Home from "./ui/ts/Home.tsx";
 import Authorization from "./ui/ts/authorization/Authorization.tsx";
 import Homepage from "./ui/ts/dnevnik/Homepage.tsx";
 import UsersPage from "./ui/ts/dnevnik/Users-page.tsx";
-import CreateUser from "./ui/ts/dnevnik/Create-user.tsx";
+import CreateUser from "./ui/ts/dnevnik/Create-user.tsx"; 
 import Calendar from "./ui/ts/dnevnik/Calendar.tsx";
 import CreateClass from "./ui/ts/dnevnik/Create-class.tsx";
 
