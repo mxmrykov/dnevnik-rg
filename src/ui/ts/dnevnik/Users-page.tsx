@@ -56,7 +56,7 @@ export default function UsersPage(): React.JSX.Element {
                 setUser(r.user)
                 setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
                 setMessage(Message("SUCCESS", r.message))
-                user?.role === "ADMIN" && PreloadListAdmins().then(r => {
+                localStorage.getItem("role") === "ADMIN" && PreloadListAdmins().then(r => {
                     if (r.error) {
                         setMessage(Message("ERROR", r.message))
                         setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
@@ -66,7 +66,7 @@ export default function UsersPage(): React.JSX.Element {
                         setMessage(Message("SUCCESS", r.message))
                     }
                 })
-                user?.role === "ADMIN" && PreloadListCoaches().then(r => {
+                localStorage.getItem("role") === "ADMIN" && PreloadListCoaches().then(r => {
                     if (r.error) {
                         setMessage(Message("ERROR", r.message))
                         setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
