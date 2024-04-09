@@ -33,7 +33,7 @@
 
 .dialog-window-bgblur {
     position: fixed;
-    z-index: 99;
+    z-index: 999;
     width: 100%;
     height: 100vh;
     backdrop-filter: blur(3px);
@@ -47,12 +47,13 @@
 }
 
 .dialog-window {
-    position: relative;
-    background-color: white;
+    position: absolute;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.65);
     width: 350px;
     max-width: 95%;
     border: unset;
     border-radius: var(--base-border-radius);
-    z-index: 99;
+    z-index: 1000;
     padding: var(--base-box-padding);
 }

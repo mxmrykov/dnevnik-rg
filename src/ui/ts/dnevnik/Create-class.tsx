@@ -77,8 +77,6 @@ export default function CreateClass(): React.JSX.Element {
         "02:30": 8000,
     }
 
-    const DATE = new Date()
-
     if (!dataPreloaded) {
         if (!authValid()) exit()
         PreloadUser().then(r => {
@@ -121,7 +119,7 @@ export default function CreateClass(): React.JSX.Element {
         {Sidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
         {dialogWindow}
-        <section className={"homepage-section"}>
+        <section className={"homepage-section"} style={{alignItems: "center"}}>
             <section className={"homepage-section"}
                      style={{alignItems: "center", width: 900, maxWidth: "95%", marginBottom: 15}}>
                 <header className={"line"} style={{justifyContent: "space-between", width: "100%"}}>

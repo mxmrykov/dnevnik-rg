@@ -25,3 +25,8 @@ export type coachMapForNewClass = {
     fi: string,
     key: number
 }
+
+export type cancelClassModel = {
+    canceled: boolean,
+    key: number
+}

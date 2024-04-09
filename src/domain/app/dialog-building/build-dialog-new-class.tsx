@@ -1,7 +1,7 @@
 // @ts-ignore
 import Space from "../../../ui/ts/elements/headers/Space.tsx";
 // @ts-ignore
-import React from "react";
+import React, {useState} from "react";
 
 export default function BuildDialogNewClass(
     coach: string,
@@ -34,7 +34,7 @@ export default function BuildDialogNewClass(
         </div>
         {Space()}
         <p className={"subtext"} style={{textAlign: "center"}}>
-            Ссылка на занятие (нажмите, чтобы скопировать):
+            Ссылка на занятие:
         </p>
         {Space()}
         <footer className={"line"}>
@@ -42,10 +42,6 @@ export default function BuildDialogNewClass(
                 className={"input-translucent"}
                 style={{
                     marginInline: 5,
-                    backgroundColor: "rgba(0, 0, 0, 0.66)"
-                }}
-                onClick={() => {
-                    navigator.clipboard.writeText(`${window.location.host}/class/${key}`)
                 }}
                 value={`${window.location.host}/class/${key}`}
                 disabled={true}
@@ -53,10 +49,17 @@ export default function BuildDialogNewClass(
             <button
                 className={"button-basic"}
                 onClick={() => {
-                    window.location.href = "/calendar"
+                    navigator.clipboard.writeText(`${window.location.host}/class/${key}`)
+                    alert('Ссылка скопирована')
                 }}>
-                Закрыть
+                Копировать
             </button>
         </footer>
+        <button
+            className={"button-basic"}
+            onClick={() => window.location.href = "/calendar"}
+        >
+            Закрыть
+        </button>
     </article>
 }

@@ -12,7 +12,7 @@
     --margin-xs: 5px;
     --min-box-width: 370px;
     --base-position-flex: flex;
-    --base-shadow: 0 10px 24px 1px rgba(228,22,85,.3);
+    --base-shadow: 0 10px 24px 1px rgba(228, 22, 85, .3);
     --base-wrap-default: wrap;
 
 }
@@ -140,6 +140,7 @@
     background-color: #f1b2be;
     color: #c52c45;
 }
+
 .success-colored {
     border: 1px solid #077409;
     background-color: #c1ffc1;
@@ -163,4 +164,48 @@
 .document-page {
     width: 95%;
     margin-block: 10px;
+}
+
+.class-info {
+    background-color: var(--dnevnik-windows-bg);
+    padding: var(--base-box-padding);
+    color: white;
+    border-radius: var(--base-border-radius);
+    width: 100%;
+    margin: 0 auto;
+    margin-block: 20px;
+    display: var(--base-position-flex);
+    flex-direction: column;
+}
+
+.bordered-block {
+    background-color: var(--dnevnik-windows-bg);
+    padding: var(--base-box-padding);
+    color: white;
+    border-radius: var(--base-border-radius);
+    width: 80px;
+    display: var(--base-position-flex);
+    justify-content: space-around;
+}
+
+.colored_bg {
+    background-color: var(--dnevnik-windows-bg);
+}
+
+.width_grided {
+    width: 430px;
+    max-width: 100%;
+    height: 310px;
+}
+
+.terracota_bg {
+    background-color: #F59056;
+    border: 2px solid #F59056;
+    box-shadow: 0 10px 24px 1px rgba(245, 144, 86, 0.3);
+}
+
+.terracota_bg:hover {
+    color: #F59056;
+    background-color: transparent;
+    border: 2px solid #F59056;
 }
