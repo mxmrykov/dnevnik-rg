@@ -319,7 +319,7 @@ export default function Calendar(): React.JSX.Element {
                     classes === null &&
                     <div
                         className={"class-info width_grided"}
-                        style={{marginTop: 50}}
+                        style={{marginTop: 50, height: 70}}
                     >
                         <h2
                             style={{textAlign: "center", width: "100%"}}
