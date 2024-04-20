@@ -3,18 +3,12 @@ import Space from "../../../ui/ts/elements/headers/Space.tsx";
 // @ts-ignore
 import React from "react";
 
-const BuildDialogCancelClassWarning = ({
-                                           classId,
-                                           coach,
-                                           times,
-                                           cancelTrigger,
-                                           cancelClassTrigger
-                                       }): React.JSX.Element => {
+const BuildDialogDeleteClassWarning = ({classId, coach, times, cancelTrigger, deleteClassTrigger}): React.JSX.Element => {
     return <article
         className={"col-center"}>
         {Space()}
-        <p style={{fontWeight: 600, fontSize: "1.0rem", textAlign: "center"}}>
-            Вы действительно хотите отменить это занятие?
+        <p style={{fontWeight: 600, fontSize: "1.0rem"}}>
+            Вы действительно хотите удалить это занятие?
         </p>
         {Space()}
         <div>
@@ -32,9 +26,9 @@ const BuildDialogCancelClassWarning = ({
         <footer className={"line"}>
             <button
                 className={"button-basic"}
-                onClick={cancelClassTrigger}
+                onClick={deleteClassTrigger}
             >
-                Да, отменить
+                Да, удалить
             </button>
             <button
                 className={"button-basic"}
@@ -49,4 +43,4 @@ const BuildDialogCancelClassWarning = ({
     </article>
 }
 
-export default BuildDialogCancelClassWarning
+export default BuildDialogDeleteClassWarning

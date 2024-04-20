@@ -1,5 +1,5 @@
 // @ts-ignore
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 // @ts-ignore
 import Sidebar from "../blocks/side-menu/Sidebar.tsx";
 // @ts-ignore
@@ -24,7 +24,13 @@ import {ShortClassInfo} from "../../../domain/constants/class";
 // @ts-ignore
 import BuildDialogCancelClassWarning from "../../../domain/app/dialog-building/build-dialog-cancel-class-warning.tsx";
 // @ts-ignore
+import BuildDialogDeleteClassWarning from "../../../domain/app/dialog-building/build-dialog-delete-class-warning.tsx";
+// @ts-ignore
 import DialogWindow from "../dialog/Dialog-window.tsx";
+// @ts-ignore
+import cancelClass from "../../../domain/http/classes/cancel-class.ts";
+// @ts-ignore
+import deleteClass from "../../../domain/http/classes/delete-class.ts";
 
 export default function Calendar(): React.JSX.Element {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -33,6 +39,9 @@ export default function Calendar(): React.JSX.Element {
     const [classes, setClasses] = useState<ShortClassInfo[]>()
     const [menuType, setMenuType] = useState<string>("BLOCK")
     const [dialogWindow, setDialogWindow] = useState<React.JSX.Element>()
+
+    const [menuAvail, setMenuAvail] = useState<boolean>(true)
+
     const DATE = new Date()
     const [today] = useState<string>(
         DATE.getFullYear().toString() +
@@ -52,6 +61,9 @@ export default function Calendar(): React.JSX.Element {
 
     if (!dataPreloaded) {
         if (!authValid()) exit()
+        if (window.innerWidth < 500) {
+            setMenuAvail(false)
+        }
         PreloadUser().then(r => {
             if (r.error) {
                 setMessage(Message("ERROR", r.message))
@@ -92,6 +104,22 @@ export default function Calendar(): React.JSX.Element {
 
         setDataPreloaded(true)
     }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+    }, []);
+
+    const handleResize = (e) => {
+        if (window.innerWidth < 500) {
+            setMenuAvail(false)
+            setMenuType("MENU")
+        }
+        if (window.innerWidth >= 500) {
+            setMenuAvail(true)
+            setMenuType("BLOCK")
+        }
+    }
+
     return <section className={"home-section"}>
         {message}
         {Sidebar({img: user?.logo_uri, fio: user?.fio})}
@@ -125,10 +153,6 @@ export default function Calendar(): React.JSX.Element {
                                     <option value="month">Месяц</option>
                             </select>
                         </span>
-                    {/*<span className={"line"}>*/}
-                    {/*    <input type={"checkbox"}/>*/}
-                    {/*    <label style={{color: "white", textAlign: "left", marginInline: 10}}>Оплаченные</label>*/}
-                    {/*</span>*/}
                 </div>
             </article>
             <span
@@ -138,9 +162,11 @@ export default function Calendar(): React.JSX.Element {
                 <p
                     className={menuType === "BLOCK" && "colored_bg"}
                     style={{width: 32, height: 32, cursor: "pointer", padding: 3, borderRadius: 5}}
-                    onClick={() => setMenuType("BLOCK")}
+                    onClick={() => {
+                        menuAvail && setMenuType("BLOCK")
+                    }}
                 >
-                    <IoList size={32} color={"white"}/>
+                    <IoList size={32} color={menuAvail ? "white" : "grey"}/>
                 </p>
                 <p
                     className={menuType === "MENU" ? "colored_bg line" : "line"}
@@ -163,7 +189,8 @@ export default function Calendar(): React.JSX.Element {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-around",
-                    flexWrap: "wrap"
+                    flexWrap: "wrap",
+                    maxWidth: "100%"
                 }}
             >
                 {classes?.map((_class: ShortClassInfo, index: number) => {
@@ -171,20 +198,32 @@ export default function Calendar(): React.JSX.Element {
                         style={menuType === "BLOCK" ? {
                             width: "95%",
                         } : {
-                            width: 500
+                            width: 460,
+                            maxWidth: "100%"
                         }}
                         href={"/calendar/" + _class.key}>
                         <div
                             className={menuType === "BLOCK" ? "class-info" : "class-info width_grided"}
                             key={index}
-                            style={{padding: 25, marginInline: 10}}
+                            style={{padding: 25}}
                         >
-                        <span className={"line"}>
+                        <span className={menuType === "BLOCK" ? "line" : "col"}>
                             {XlHeaderColored(
                                 _class?.class_time + " - " +
                                 addTimes([_class?.class_time, _class?.class_duration])
                             )}
-                            <h2>{menuType === "BLOCK" && ", " + _class.coach}</h2>
+                            <h2>{menuType === "BLOCK" ? ", " + _class.coach : _class.coach}</h2>
+                            {(!_class.scheduled && !_class.deleted) &&
+                                <h2 style={{color: "orange", marginLeft: 8}}>{"[Отменено]"}</h2>}
+                            {
+                                (_class.scheduled &&
+                                    addTimes([_class.class_time, _class.class_duration]) < (DATE.getHours() + ":" + DATE.getMinutes())
+                                    && !_class.deleted
+                                )
+                                && <h2 style={{color: "lawngreen", marginLeft: 8}}>{"[Завершено]"}</h2>
+                            }
+                            {(_class.deleted) &&
+                                <h2 style={{color: "orangered", marginLeft: 8}}>{"[Удалено]"}</h2>}
                         </span>
                             <span style={{
                                 marginBlock: 15,
@@ -273,6 +312,9 @@ export default function Calendar(): React.JSX.Element {
                                 }}>
                                 <button
                                     className={"button-basic terracota_bg"}
+                                    style={{
+                                        marginRight: 10
+                                    }}
                                     onClick={e => {
                                         e.preventDefault()
                                         setDialogWindow(
@@ -280,9 +322,21 @@ export default function Calendar(): React.JSX.Element {
                                                 <BuildDialogCancelClassWarning
                                                     classId={_class.key}
                                                     coach={_class.coach}
-                                                    times={addTimes([_class.class_time, _class.class_duration])}
+                                                    times={_class.class_time + "-" + addTimes([_class.class_time, _class.class_duration])}
                                                     cancelTrigger={() => {
                                                         setDialogWindow(<React.Fragment></React.Fragment>)
+                                                    }}
+                                                    cancelClassTrigger={() => {
+                                                        cancelClass(_class?.key).then(res => {
+                                                            if (!res?.error) {
+                                                                _class.scheduled = false
+                                                            }
+                                                            let message = (res?.error ? "Произошла ошибка при отмене занятия" : "Занятие отменено")
+                                                            setDialogWindow(<React.Fragment></React.Fragment>)
+                                                            setMessage(Message((res?.error ? "ERROR" : "INFO"), message))
+                                                            setTimeout(() => setMessage(
+                                                                <React.Fragment></React.Fragment>), 5100)
+                                                        })
                                                     }}
                                                 />
                                             )
@@ -297,12 +351,24 @@ export default function Calendar(): React.JSX.Element {
                                         e.preventDefault()
                                         setDialogWindow(
                                             DialogWindow("Удаление занятия",
-                                                <BuildDialogCancelClassWarning
+                                                <BuildDialogDeleteClassWarning
                                                     classId={_class.key}
                                                     coach={_class.coach}
-                                                    times={addTimes([_class.class_time, _class.class_duration])}
+                                                    times={_class.class_time + "-" + addTimes([_class.class_time, _class.class_duration])}
                                                     cancelTrigger={() => {
                                                         setDialogWindow(<React.Fragment></React.Fragment>)
+                                                    }}
+                                                    deleteClassTrigger={() => {
+                                                        deleteClass(_class?.key).then(res => {
+                                                            if (!res?.error) {
+                                                                _class.deleted = true
+                                                            }
+                                                            let message = (res?.error ? "Произошла ошибка при удалении занятия" : "Занятие удалено")
+                                                            setDialogWindow(<React.Fragment></React.Fragment>)
+                                                            setMessage(Message((res?.error ? "ERROR" : "INFO"), message))
+                                                            setTimeout(() => setMessage(
+                                                                <React.Fragment></React.Fragment>), 5100)
+                                                        })
                                                     }}
                                                 />
                                             )

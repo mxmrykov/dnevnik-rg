@@ -1,14 +1,13 @@
 // @ts-ignore
 import * as constants from "../../constants/api.ts";
-import {CancelClass} from "../../constants/response";
-import {cancelClassModel} from "../../constants/sub-objects";
+import {CancelClass, DeleteClass} from "../../constants/response";
+import {cancelClassModel, deleteClassModel} from "../../constants/sub-objects";
 import axios from "axios";
 
-export default async function cancelClass(classId: number):
-    Promise<{ error: boolean, text: string, data: cancelClassModel }> {
-    return await constants.instance.post<CancelClass>(
-        "/classes/cancel?classId=" + classId,
-        {},
+export default async function deleteClass(classId: number):
+    Promise<{ error: boolean, text: string, data: deleteClassModel }> {
+    return await constants.instance.delete<DeleteClass>(
+        "/classes/delete?classId=" + classId,
         {
             headers: {
                 "X-User-Id": localStorage.getItem("key"),
@@ -17,7 +16,7 @@ export default async function cancelClass(classId: number):
             }
         }
     ).then(response => {
-        return {error: false, text: "Занятие отменено", data: response.data.data};
+        return {error: false, text: "Занятие удалено", data: response.data.data};
     }).catch(error => {
         if (axios.isAxiosError(error)) {
             if (error.code === "ERR_NETWORK") return {

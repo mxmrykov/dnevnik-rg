@@ -30,3 +30,8 @@ export type cancelClassModel = {
     canceled: boolean,
     key: number
 }
+
+export type deleteClassModel = {
+    deleted: boolean,
+    key: number
+}

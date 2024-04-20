@@ -18,5 +18,7 @@ export type ShortClassInfo = {
     class_duration: string,
     class_type: string,
     pupil_count: number,
+    scheduled: boolean,
+    deleted: boolean,
     is_open_to_sign_up: boolean,
 }

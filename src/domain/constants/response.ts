@@ -7,7 +7,7 @@ import {
     pupilListModel,
     pupilModel, pupilsBdays
 } from "./users-models";
-import {cancelClassModel, timeAvailability} from "./sub-objects";
+import {cancelClassModel, deleteClassModel, timeAvailability} from "./sub-objects";
 import {ShortClassInfo} from "./class";
 
 export type PreloadPupilResponse = {
@@ -99,6 +99,13 @@ export type GetTodayClass = {
 
 export type CancelClass = {
     data: cancelClassModel,
+    status_code: number,
+    message: string,
+    isError: boolean
+}
+
+export type DeleteClass = {
+    data: deleteClassModel,
     status_code: number,
     message: string,
     isError: boolean
