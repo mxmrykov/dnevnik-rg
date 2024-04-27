@@ -43,13 +43,13 @@ export default function BuildDialogNewClass(
                 style={{
                     marginInline: 5,
                 }}
-                value={`${window.location.host}/class/${key}`}
+                value={`${window.location.host}/calendar/class/${key}`}
                 disabled={true}
             />
             <button
                 className={"button-basic"}
                 onClick={() => {
-                    navigator.clipboard.writeText(`${window.location.host}/class/${key}`)
+                    navigator.clipboard.writeText(`${window.location.host}/calendar/class/${key}`)
                     alert('Ссылка скопирована')
                 }}>
                 Копировать

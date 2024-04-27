@@ -20,17 +20,16 @@ import {FaPlus} from "react-icons/fa6";
 import {IoList, IoGridOutline} from "react-icons/io5";
 // @ts-ignore
 import GetClassesToday from "../../../domain/http/classes/get-classes-today.ts";
-import {ShortClassInfo} from "../../../domain/constants/class";
 // @ts-ignore
-import BuildDialogCancelClassWarning from "../../../domain/app/dialog-building/build-dialog-cancel-class-warning.tsx";
+import {ShortClassInfo} from "../../../domain/constants/class.ts";
 // @ts-ignore
-import BuildDialogDeleteClassWarning from "../../../domain/app/dialog-building/build-dialog-delete-class-warning.tsx";
+import DayCalendar from "../blocks/calendar/DayCalendar.tsx";
 // @ts-ignore
-import DialogWindow from "../dialog/Dialog-window.tsx";
+import CalendarTypeSelector from "../blocks/calendar/CalendarTypeSelector.tsx";
 // @ts-ignore
-import cancelClass from "../../../domain/http/classes/cancel-class.ts";
+import MenuTypeSelector from "../blocks/calendar/MenuTypeSelector.tsx";
 // @ts-ignore
-import deleteClass from "../../../domain/http/classes/delete-class.ts";
+import MonthCalendar from "../blocks/calendar/MonthCalendar.tsx";
 
 export default function Calendar(): React.JSX.Element {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -39,7 +38,9 @@ export default function Calendar(): React.JSX.Element {
     const [classes, setClasses] = useState<ShortClassInfo[]>()
     const [menuType, setMenuType] = useState<string>("BLOCK")
     const [dialogWindow, setDialogWindow] = useState<React.JSX.Element>()
+    const [calendarType, setCalendarType] = useState<string>("day")
 
+    const [monthAvail, setMonthAvail] = useState<boolean>(true)
     const [menuAvail, setMenuAvail] = useState<boolean>(true)
 
     const DATE = new Date()
@@ -48,16 +49,6 @@ export default function Calendar(): React.JSX.Element {
         "-" + ((DATE.getMonth() + 1) < 10 ? "0" + (DATE.getMonth() + 1).toString() : (DATE.getMonth() + 1).toString()) +
         "-" + (DATE.getDate() < 10 ? "0" + DATE.getDate().toString() : DATE.getDate().toString())
     )
-
-    function addTimes(timeArray: string[]) {
-        let mins = timeArray.reduce((acc, time) => {
-            let [h, m] = time.split(':');
-            acc += Number(h) * 60 + Number(m) * 1;
-            return acc;
-        }, 0);
-        return (mins / 60 | 0) + ':' + ('0' + (mins % 60)).slice(-2);
-    }
-
 
     if (!dataPreloaded) {
         if (!authValid()) exit()
@@ -118,6 +109,13 @@ export default function Calendar(): React.JSX.Element {
             setMenuAvail(true)
             setMenuType("BLOCK")
         }
+        if (window.innerWidth < 1150) {
+            setMonthAvail(false)
+            setCalendarType("day")
+        }
+        if (window.innerWidth >= 1150) {
+            setMonthAvail(true)
+        }
     }
 
     return <section className={"home-section"}>
@@ -136,265 +134,23 @@ export default function Calendar(): React.JSX.Element {
                     Новое занятие
                 </a>
             </header>
-            <article className={"full-width-window-homepage"}>
-                <header className={"line"}>
-                    {XlHeader("Фильтры", {color: "white"})}
-                </header>
-                <div
-                    className={"line"}
-                    style={{margin: 15}}
-                >
-                    <span className={"line"}>
-                            <label style={{color: "white", textAlign: "left", marginInline: 10}}>Период</label>
-                            <select
-                                className={"input-translucent"}
-                                style={{padding: "7px 12px"}}>
-                                    <option value="day">День</option>
-                                    <option value="month">Месяц</option>
-                            </select>
-                        </span>
-                </div>
-            </article>
-            <span
-                className={"line bordered-block"}
-                style={{margin: "0 auto"}}
-            >
-                <p
-                    className={menuType === "BLOCK" && "colored_bg"}
-                    style={{width: 32, height: 32, cursor: "pointer", padding: 3, borderRadius: 5}}
-                    onClick={() => {
-                        menuAvail && setMenuType("BLOCK")
-                    }}
-                >
-                    <IoList size={32} color={menuAvail ? "white" : "grey"}/>
-                </p>
-                <p
-                    className={menuType === "MENU" ? "colored_bg line" : "line"}
-                    style={{width: 30, height: 30, cursor: "pointer", padding: 3, borderRadius: 5}}
-                    onClick={() => setMenuType("MENU")}
-                >
-                    <IoGridOutline size={28} color={"white"}/>
-                </p>
-            </span>
-            <section
-                style={menuType === "BLOCK" ? {
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexWrap: "nowrap"
-                } : {
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-around",
-                    flexWrap: "wrap",
-                    maxWidth: "100%"
-                }}
-            >
-                {classes?.map((_class: ShortClassInfo, index: number) => {
-                    return <a
-                        style={menuType === "BLOCK" ? {
-                            width: "95%",
-                        } : {
-                            width: 460,
-                            maxWidth: "100%"
-                        }}
-                        href={"/calendar/" + _class.key}>
-                        <div
-                            className={menuType === "BLOCK" ? "class-info" : "class-info width_grided"}
-                            key={index}
-                            style={{padding: 25}}
-                        >
-                        <span className={menuType === "BLOCK" ? "line" : "col"}>
-                            {XlHeaderColored(
-                                _class?.class_time + " - " +
-                                addTimes([_class?.class_time, _class?.class_duration])
-                            )}
-                            <h2>{menuType === "BLOCK" ? ", " + _class.coach : _class.coach}</h2>
-                            {(!_class.scheduled && !_class.deleted) &&
-                                <h2 style={{color: "orange", marginLeft: 8}}>{"[Отменено]"}</h2>}
-                            {
-                                (_class.scheduled &&
-                                    addTimes([_class.class_time, _class.class_duration]) < (DATE.getHours() + ":" + DATE.getMinutes())
-                                    && !_class.deleted
-                                )
-                                && <h2 style={{color: "lawngreen", marginLeft: 8}}>{"[Завершено]"}</h2>
-                            }
-                            {(_class.deleted) &&
-                                <h2 style={{color: "orangered", marginLeft: 8}}>{"[Удалено]"}</h2>}
-                        </span>
-                            <span style={{
-                                marginBlock: 15,
-                                height: 65,
-                                overflowY: "scroll",
-                                backgroundColor: "rgba(0, 0, 0, 0.35)",
-                                padding: 8,
-                                fontSize: "0.9rem",
-                                borderRadius: 5,
-                                boxShadow: "0px -16px 8px -13px rgba(0,0,0,0.45) inset"
-                            }}>
-                                <h3>
-                                    Ученицы:
-                                    {_class?.pupil?.map((val: string, index: number) => {
-                                        return <React.Fragment>
-                                            {" " + val + ((index < (_class?.pupil?.length - 1)) ? ", " : "")}
-                                        </React.Fragment>
-                                    })}
-                                </h3>
-                            </span>
-                            <div className={"line"} style={{justifyContent: "space-around", width: "100%"}}>
-                                <article>
-                                    <span>
-                                        <h3 style={{marginBlock: 12}}>
-                                            Основная информация:
-                                        </h3>
-                                    </span>
-                                    <span>
-                                        <h4 style={{marginBlock: 5}}>
-                                            Время:
-                                            <span className={"colored"}>
-                                                {" " + _class?.class_time}
-                                            </span>
-                                        </h4>
-                                    </span>
-                                    <span>
-                                        <h4 style={{marginBlock: 5}}>
-                                            Длительность:
-                                            <span className={"colored"}>
-                                                {" " + _class?.class_duration}
-                                            </span>
-                                        </h4>
-                                    </span>
-                                    <span style={{marginBlock: 5}}>
-                                        <h4>
-                                            Тип занятия:
-                                            <span className={"colored"}>
-                                                {_class?.class_type === "SINGLE" && " Одиночное"}
-                                                {_class?.class_type === "MULTIPLE" && " Групповое"}
-                                            </span>
-                                        </h4>
-                                    </span>
-                                </article>
-                                <article>
-                                    <span>
-                                        <h3 style={{marginBlock: 15}}>
-                                            Дополнительно:
-                                        </h3>
-                                    </span>
-                                    <span>
-                                        <h4 style={{marginBlock: 5}}>
-                                            Открыто для записи:
-                                            <span className={"colored"}>
-                                                {_class?.is_open_to_sign_up ? " Да" : " Нет"}
-                                            </span>
-                                        </h4>
-                                    </span>
-                                    <span style={{marginBlock: 5}}>
-                                        <h4>
-                                            Количество учениц:
-                                            <span className={"colored"}>
-                                                {" " + _class?.pupil_count}
-                                            </span>
-                                        </h4>
-                                    </span>
-                                </article>
-                            </div>
-                            <article
-                                className={"line"}
-                                style={{
-                                    justifyContent: "space-around",
-                                    width: 300,
-                                    maxWidth: "95%",
-                                    margin: "0 auto",
-                                    marginBlock: 15
-                                }}>
-                                <button
-                                    className={"button-basic terracota_bg"}
-                                    style={{
-                                        marginRight: 10
-                                    }}
-                                    onClick={e => {
-                                        e.preventDefault()
-                                        setDialogWindow(
-                                            DialogWindow("Отмена занятия",
-                                                <BuildDialogCancelClassWarning
-                                                    classId={_class.key}
-                                                    coach={_class.coach}
-                                                    times={_class.class_time + "-" + addTimes([_class.class_time, _class.class_duration])}
-                                                    cancelTrigger={() => {
-                                                        setDialogWindow(<React.Fragment></React.Fragment>)
-                                                    }}
-                                                    cancelClassTrigger={() => {
-                                                        cancelClass(_class?.key).then(res => {
-                                                            if (!res?.error) {
-                                                                _class.scheduled = false
-                                                            }
-                                                            let message = (res?.error ? "Произошла ошибка при отмене занятия" : "Занятие отменено")
-                                                            setDialogWindow(<React.Fragment></React.Fragment>)
-                                                            setMessage(Message((res?.error ? "ERROR" : "INFO"), message))
-                                                            setTimeout(() => setMessage(
-                                                                <React.Fragment></React.Fragment>), 5100)
-                                                        })
-                                                    }}
-                                                />
-                                            )
-                                        )
-                                    }}
-                                >
-                                    Отменить занятие
-                                </button>
-                                <button
-                                    className={"button-basic"}
-                                    onClick={e => {
-                                        e.preventDefault()
-                                        setDialogWindow(
-                                            DialogWindow("Удаление занятия",
-                                                <BuildDialogDeleteClassWarning
-                                                    classId={_class.key}
-                                                    coach={_class.coach}
-                                                    times={_class.class_time + "-" + addTimes([_class.class_time, _class.class_duration])}
-                                                    cancelTrigger={() => {
-                                                        setDialogWindow(<React.Fragment></React.Fragment>)
-                                                    }}
-                                                    deleteClassTrigger={() => {
-                                                        deleteClass(_class?.key).then(res => {
-                                                            if (!res?.error) {
-                                                                _class.deleted = true
-                                                            }
-                                                            let message = (res?.error ? "Произошла ошибка при удалении занятия" : "Занятие удалено")
-                                                            setDialogWindow(<React.Fragment></React.Fragment>)
-                                                            setMessage(Message((res?.error ? "ERROR" : "INFO"), message))
-                                                            setTimeout(() => setMessage(
-                                                                <React.Fragment></React.Fragment>), 5100)
-                                                        })
-                                                    }}
-                                                />
-                                            )
-                                        )
-                                    }}
-                                >
-                                    Удалить занятие
-                                </button>
-                            </article>
-                        </div>
-                    </a>
-                })}
-                {
-                    classes === null &&
-                    <div
-                        className={"class-info width_grided"}
-                        style={{marginTop: 50, height: 70}}
-                    >
-                        <h2
-                            style={{textAlign: "center", width: "100%"}}
-                        >
-                            Занятий на сегодня нет
-                        </h2>
-                    </div>
-                }
-            </section>
+            <CalendarTypeSelector monthAvail={monthAvail} calendarType={calendarType}
+                                  setCalendarType={setCalendarType}/>
+            <MenuTypeSelector menuType={menuType} menuAvail={menuAvail} setMenuType={setMenuType}/>
+            {
+                calendarType === "day" && <DayCalendar
+                    setMessage={setMessage}
+                    setDialog={setDialogWindow}
+                    classes={classes}
+                    menuType={menuType}
+                />
+            }
+            {
+                calendarType === "month" && <MonthCalendar
+                    dialogCallback={setDialogWindow}
+                    messageCallback={setMessage}
+                />
+            }
         </section>
     </section>
 }

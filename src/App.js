@@ -7,6 +7,7 @@ import CreateUser from "./ui/ts/dnevnik/Create-user.tsx";
 import Info from "./ui/ts/dnevnik/Info.tsx";
 import Calendar from "./ui/ts/dnevnik/Calendar.tsx";
 import CreateClass from "./ui/ts/dnevnik/Create-class.tsx";
+import Class from "./ui/ts/dnevnik/Class.tsx";
 
 const homePath = {route: "/", elem: <Home/>}
 const homePagePath = {route: "/home", elem: <Homepage/>}
@@ -15,11 +16,13 @@ const usersPageDnevnikPath = {route: "/users", elem: <UsersPage/>}
 const createUserPath = {route: "/users/create", elem: <CreateUser/>}
 const infoPath = {route: "/info", elem: <Info/>}
 const calendarPath = {route: "/calendar", elem: <Calendar/>}
+const calendarClass = {route: "/calendar/class/:id", elem: <Class/>}
 const newClassPath = {route: "/calendar/create", elem: <CreateClass/>}
 
 export default function App() {
     return <Routes>
         <Route path={homePath.route} element={homePath.elem}/>
+        <Route path={calendarClass.route} element={calendarClass.elem}/>
         <Route path={authPath.route} element={authPath.elem}/>
         <Route path={homePagePath.route} element={homePagePath.elem}/>
         <Route path={usersPageDnevnikPath.route} element={usersPageDnevnikPath.elem}/>

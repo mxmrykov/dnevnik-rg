@@ -14,6 +14,7 @@ export type ShortClassInfo = {
     key: number,
     coach: string,
     pupil: string[],
+    class_date: string,
     class_time: string,
     class_duration: string,
     class_type: string,
@@ -21,4 +22,22 @@ export type ShortClassInfo = {
     scheduled: boolean,
     deleted: boolean,
     is_open_to_sign_up: boolean,
+}
+
+export type MicroClassesMap = {
+    [date: string]: MicroClasses[]
+}
+
+export type MicroClasses = {
+    key: number,
+    class_date: string,
+    class_time: string,
+    class_duration: string,
+}
+
+export type ClassInfoResponse = {
+    data: ShortClassInfo,
+    status_code: number;
+    message: string;
+    isError: boolean;
 }

@@ -8,7 +8,7 @@ import {
     pupilModel, pupilsBdays
 } from "./users-models";
 import {cancelClassModel, deleteClassModel, timeAvailability} from "./sub-objects";
-import {ShortClassInfo} from "./class";
+import {MicroClasses, MicroClassesMap, ShortClassInfo} from "./class";
 
 export type PreloadPupilResponse = {
     data: pupilModel
@@ -92,6 +92,13 @@ export type CreateClassResponse = {
 
 export type GetTodayClass = {
     data: ShortClassInfo[],
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+
+export type GetMonthClass = {
+    data: MicroClassesMap[],
     status_code: number;
     message: string;
     isError: boolean;
