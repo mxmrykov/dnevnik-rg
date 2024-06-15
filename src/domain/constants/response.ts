@@ -117,3 +117,10 @@ export type DeleteClass = {
     message: string,
     isError: boolean
 }
+
+export type DeletePupil = {
+    data: null,
+    status_code: number,
+    message: string,
+    isError: boolean
+}

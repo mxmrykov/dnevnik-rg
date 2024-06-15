@@ -25,6 +25,7 @@ import PageForbidden from "../blocks/forbidden/Page-forbidden.tsx";
 import XlHeader, {XlHeaderColored} from "../elements/headers/Xl-header.tsx";
 import {IoPersonAddSharp} from "react-icons/io5";
 import {IoIosArrowForward} from "react-icons/io";
+import {MdDeleteOutline, MdOutlineUnarchive} from "react-icons/md";
 // @ts-ignore
 import PreloadListAdmins from "../../../domain/http/preload-lists/preload-list-admins.ts";
 // @ts-ignore
@@ -35,6 +36,15 @@ import PreloadListPupils from "../../../domain/http/preload-lists/preload-list-p
 import Sidebar from "../blocks/side-menu/Sidebar.tsx";
 // @ts-ignore
 import PreloadCoachPupils from "../../../domain/http/preload-lists/preload-coach-pupils.ts";
+// @ts-ignore
+import DialogWindow from "../dialog/Dialog-window.tsx";
+import BuildDialogDeleteClassWarning from "../../../domain/app/dialog-building/build-dialog-delete-class-warning";
+import deleteClass from "../../../domain/http/classes/delete-class";
+// @ts-ignore
+import BuildDialogDeleteUserWarning from "../../../domain/app/dialog-building/build-dialog-delete-user.tsx";
+// @ts-ignore
+import BuildDialogArchiveUserWarning from "../../../domain/app/dialog-building/build-dialog-archive-user.tsx";
+import deletePupil from "../../../domain/http/users/delete-pupil";
 
 export default function UsersPage(): React.JSX.Element {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -46,6 +56,8 @@ export default function UsersPage(): React.JSX.Element {
     const [dropDownAdminsActive, setDropDownAdminsActive] = useState<boolean>(false)
     const [dropDownCoachesActive, setDropDownCoachesActive] = useState<boolean>(false)
     const [dropDownPupilsActive, setDropDownPupilsActive] = useState<boolean>(false)
+    const [dialog, setDialog] = useState<React.JSX.Element>()
+
     if (!dataPreloaded) {
         if (!authValid()) exit()
         PreloadUser().then(r => {
@@ -97,6 +109,7 @@ export default function UsersPage(): React.JSX.Element {
         {message}
         {Sidebar({img: user?.logo_uri, fio: user?.fio})}
         {Notifications()}
+        {dialog}
         {user?.role === "ADMIN" || user?.role === "COACH" ?
             <section className={"homepage-section"}>
                 <header className={"line"} style={{justifyContent: "space-between"}}>
@@ -181,7 +194,34 @@ export default function UsersPage(): React.JSX.Element {
                                             justifyContent: "space-around"
                                         }}>
                                             <h1 style={{fontSize: "1.2rem", color: "white"}}>{coach?.fio}</h1>
-                                            <h2 style={{fontSize: "1.0rem", color: "lightgrey"}}>ID: {coach?.key}</h2>
+                                            <h2 style={{
+                                                fontSize: "1.0rem",
+                                                color: "lightgrey"
+                                            }}>ID: {coach?.key}</h2>
+                                        </aside>
+                                        <aside
+                                            style={{
+                                                display: "flex"
+                                            }}>
+                                            <MdDeleteOutline
+                                                title={"Удалить"}
+                                                className={"delete-user-ico"}
+                                                color={"lightgrey"}
+                                                size={34}
+                                                onClick={e => {
+                                                    e.preventDefault()
+
+                                                }}
+                                            />
+                                            <MdOutlineUnarchive
+                                                title={"Архивировать"}
+                                                className={"delete-user-ico"}
+                                                color={"lightgrey"}
+                                                size={34}
+                                                onClick={e => {
+                                                    e.preventDefault()
+                                                }}
+                                            />
                                         </aside>
                                     </article>
                                 })}
@@ -211,17 +251,72 @@ export default function UsersPage(): React.JSX.Element {
                                 width: "100%"
                             }}>
                                 {shortPupilList?.map(pupil => {
-                                    return <article className={"users-list-user line"}
-                                                    onClick={() => window.location.href = `/user/${pupil?.key}`}>
+                                    return <article className={"users-list-user line"}>
                                         <img src={pupil?.logo_uri} alt="admin logo" className={"image-s"}
                                              style={{marginInline: 10}}/>
-                                        <aside className={"col"} style={{
-                                            alignItems: "start",
-                                            height: 70,
-                                            justifyContent: "space-around"
-                                        }}>
+                                        <aside
+                                            onClick={() => window.location.href = `/user/${pupil?.key}`}
+                                            className={"col"}
+                                            style={{
+                                                alignItems: "start",
+                                                height: 70,
+                                                justifyContent: "space-around"
+                                            }}
+                                        >
                                             <h1 style={{fontSize: "1.2rem", color: "white"}}>{pupil?.fio}</h1>
                                             <h2 style={{fontSize: "1.0rem", color: "lightgrey"}}>ID: {pupil?.key}</h2>
+                                        </aside>
+                                        <aside
+                                            style={{
+                                                display: "flex"
+                                            }}>
+                                            <MdDeleteOutline
+                                                title={"Удалить"}
+                                                className={"delete-user-ico"}
+                                                color={"lightgrey"}
+                                                size={34}
+                                                onClick={e => {
+                                                    e.preventDefault()
+                                                    setDialog(DialogWindow("Удаление пользователя",
+                                                        <BuildDialogDeleteUserWarning
+                                                            userName={pupil?.fio}
+                                                            cancelTrigger={() => {
+                                                                setDialog(<React.Fragment></React.Fragment>)
+                                                            }}
+                                                            deleteUserTrigger={() => {
+
+                                                            }}
+                                                        />))
+                                                }}
+                                            />
+                                            <MdOutlineUnarchive
+                                                title={"Архивировать"}
+                                                className={"delete-user-ico"}
+                                                color={"lightgrey"}
+                                                size={34}
+                                                onClick={e => {
+                                                    console.log(e)
+                                                    e.preventDefault()
+                                                    setDialog(DialogWindow("Архивация пользователя",
+                                                            <BuildDialogArchiveUserWarning
+                                                                userName={pupil?.fio}
+                                                                cancelTrigger={() => {
+                                                                    setDialog(<React.Fragment></React.Fragment>)
+                                                                }}
+                                                                archiveUserTrigger={() => {
+                                                                    deletePupil(pupil?.key).then(res => {
+                                                                        let message = (res?.error ? "Произошла ошибка при удалении ученицы" : "Ученица удалена")
+                                                                        setDialog(<React.Fragment></React.Fragment>)
+                                                                        setMessage(Message((res?.error ? "ERROR" : "INFO"), message))
+                                                                        setTimeout(() => setMessage(
+                                                                            <React.Fragment></React.Fragment>), 5100)
+                                                                    })
+                                                                }}
+                                                            />
+                                                        )
+                                                    )
+                                                }}
+                                            />
                                         </aside>
                                     </article>
                                 })}
