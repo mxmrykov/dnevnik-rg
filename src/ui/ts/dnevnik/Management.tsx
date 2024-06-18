@@ -78,7 +78,7 @@ export default function Management(): React.JSX.Element {
     }
 
     const handleDeArchUser = e => {
-        let targetFunc;
+        let targetFunc: Promise<any>;
         if (e.target.id === "Ученицы") {
             targetFunc = DeArchiveUser("pupil", selectedDeArchPupil)
         } else if (e.target.id === "Тренеры") {

@@ -6,10 +6,11 @@ import * as constants from "../../constants/api.ts";
 import {DeletePupil} from "../../constants/response.ts";
 import axios from "axios";
 
-export default async function deletePupil(pupilId: number):
+export default async function archiveUser(pupilId: number, userType: string):
     Promise<{ error: boolean, text: string, data: deleteClassModel }> {
-    return await constants.instance.delete<DeletePupil>(
-        "/users/pupil/delete?pupilId=" + pupilId,
+    return await constants.instance.post<DeletePupil>(
+        "/users/" + userType + "/archive?" + userType + "Id=" + pupilId,
+        {},
         {
             headers: {
                 "X-User-Id": localStorage.getItem("key"),
@@ -18,7 +19,7 @@ export default async function deletePupil(pupilId: number):
             }
         }
     ).then(response => {
-        return {error: false, text: "Ученица удалена", data: response.data.data};
+        return {error: false, text: "Пользователь архивирован", data: response.data.data};
     }).catch(error => {
         if (axios.isAxiosError(error)) {
             if (error.code === "ERR_NETWORK") return {
@@ -32,7 +33,6 @@ export default async function deletePupil(pupilId: number):
                 return {error: true, text: "Заполните поля правильно", data: undefined};
             } else return {error: true, text: "Ошибка запроса", data: undefined};
         } else {
-            console.log(error);
             return {error: true, text: "Неизвестная ошибка", data: undefined};
         }
     });
