@@ -28,6 +28,8 @@ import XlHeader from "../elements/headers/Xl-header.tsx";
 import GetArchivedUsers from "../../../domain/http/users/get-archived-users.ts";
 // @ts-ignore
 import DeArchUser from "../blocks/ManagePage/DeArchUser.tsx";
+// @ts-ignore
+import DeArchiveUser from "../../../domain/http/users/dearchive-user.ts";
 
 export default function Management(): React.JSX.Element {
 
@@ -75,10 +77,23 @@ export default function Management(): React.JSX.Element {
         setDataPreloaded(true)
     }
 
-    const handleDeArchUser = (userType: string) => {
-
+    const handleDeArchUser = e => {
+        let targetFunc;
+        if (e.target.id === "Ученицы") {
+            targetFunc = DeArchiveUser("pupil", selectedDeArchPupil)
+        } else if (e.target.id === "Тренеры") {
+            targetFunc = DeArchiveUser("coach", selectedDeArchCoach)
+        }
+        targetFunc.then(res => {
+            if (res.error) {
+                setMessage(Message("ERROR", "Ошибка разархивации пользователя"))
+                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+            } else {
+                setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
+                setMessage(Message("SUCCESS", "Пользователь разархивирован"))
+            }
+        })
     }
-
 
 
     return <section className={"home-section"}>

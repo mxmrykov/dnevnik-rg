@@ -45,6 +45,7 @@ export default function DeArchUser({userType, preloadList, setSelectedDAUser, de
         <button
             className={"button-basic"}
             style={{marginInline: 5}}
+            id={userType}
             onClick={deArchUserTrigger}
         >
             Разархивировать
