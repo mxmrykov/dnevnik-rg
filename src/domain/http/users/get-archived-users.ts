@@ -1,15 +1,14 @@
-// @ts-ignore
-import {deleteClassModel} from "../../constants/sub-objects.ts";
+import {coachListModel, pupilListModel} from "../../constants/users-models";
 // @ts-ignore
 import * as constants from "../../constants/api.ts";
 // @ts-ignore
-import {DeletePupil} from "../../constants/response.ts";
+import {PreloadCoachList, PreloadPupilList} from "../../constants/response.ts";
 import axios from "axios";
 
-export default async function deletePupil(pupilId: number):
-    Promise<{ error: boolean, text: string, data: deleteClassModel }> {
-    return await constants.instance.delete<DeletePupil>(
-        "/users/pupil/delete?pupilId=" + pupilId,
+export default async function GetArchivedUsers(type: string):
+    Promise<{ error: boolean, text: string, data: pupilListModel[] | coachListModel[] }> {
+    return await constants.instance.get<PreloadPupilList | PreloadCoachList>(
+        "/users/" + type + "/archive/get",
         {
             headers: {
                 "X-User-Id": localStorage.getItem("key"),
@@ -18,7 +17,7 @@ export default async function deletePupil(pupilId: number):
             }
         }
     ).then(response => {
-        return {error: false, text: "Ученица удалена", data: response.data.data};
+        return {error: false, text: "Список архивированных пользователей получен", data: response.data.data};
     }).catch(error => {
         if (axios.isAxiosError(error)) {
             if (error.code === "ERR_NETWORK") return {
@@ -32,7 +31,6 @@ export default async function deletePupil(pupilId: number):
                 return {error: true, text: "Заполните поля правильно", data: undefined};
             } else return {error: true, text: "Ошибка запроса", data: undefined};
         } else {
-            console.log(error);
             return {error: true, text: "Неизвестная ошибка", data: undefined};
         }
     });

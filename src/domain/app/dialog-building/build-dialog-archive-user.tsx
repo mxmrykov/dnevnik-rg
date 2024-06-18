@@ -7,12 +7,16 @@ const BuildDialogArchiveUserWarning = ({userName, cancelTrigger, archiveUserTrig
     return <article
         className={"col-center"}>
         {Space()}
-        <p style={{fontWeight: 600, fontSize: "1.0rem"}}>
+        <p style={{fontWeight: 600, fontSize: "1.0rem", textAlign: "center"}}>
             Вы действительно хотите архивировать этого пользователя?
         </p>
         {Space()}
         <div>
-            <p>
+            <p
+                style={{
+                    textAlign: "center"
+                }}
+            >
                 Пользователь: {userName}
             </p>
         </div>

@@ -8,6 +8,7 @@ import Info from "./ui/ts/dnevnik/Info.tsx";
 import Calendar from "./ui/ts/dnevnik/Calendar.tsx";
 import CreateClass from "./ui/ts/dnevnik/Create-class.tsx";
 import Class from "./ui/ts/dnevnik/Class.tsx";
+import Management from "./ui/ts/dnevnik/Management.tsx";
 
 const homePath = {route: "/", elem: <Home/>}
 const homePagePath = {route: "/home", elem: <Homepage/>}
@@ -18,6 +19,7 @@ const infoPath = {route: "/info", elem: <Info/>}
 const calendarPath = {route: "/calendar", elem: <Calendar/>}
 const calendarClass = {route: "/calendar/class/:id", elem: <Class/>}
 const newClassPath = {route: "/calendar/create", elem: <CreateClass/>}
+const managementPath = {route: "/manage", elem: <Management/>}
 
 export default function App() {
     return <Routes>
@@ -30,5 +32,6 @@ export default function App() {
         <Route path={infoPath.route} element={infoPath.elem}/>
         <Route path={calendarPath.route} element={calendarPath.elem}/>
         <Route path={newClassPath.route} element={newClassPath.elem}/>
+        <Route path={managementPath.route} element={managementPath.elem}/>
     </Routes>
 }

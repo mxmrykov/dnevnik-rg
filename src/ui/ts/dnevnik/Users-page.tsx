@@ -38,13 +38,14 @@ import Sidebar from "../blocks/side-menu/Sidebar.tsx";
 import PreloadCoachPupils from "../../../domain/http/preload-lists/preload-coach-pupils.ts";
 // @ts-ignore
 import DialogWindow from "../dialog/Dialog-window.tsx";
-import BuildDialogDeleteClassWarning from "../../../domain/app/dialog-building/build-dialog-delete-class-warning";
-import deleteClass from "../../../domain/http/classes/delete-class";
 // @ts-ignore
 import BuildDialogDeleteUserWarning from "../../../domain/app/dialog-building/build-dialog-delete-user.tsx";
 // @ts-ignore
 import BuildDialogArchiveUserWarning from "../../../domain/app/dialog-building/build-dialog-archive-user.tsx";
-import deletePupil from "../../../domain/http/users/delete-pupil";
+// @ts-ignore
+import deletePupil from "../../../domain/http/users/delete-pupil.ts";
+// @ts-ignore
+import archivePupil from "../../../domain/http/users/archive-pupil.ts";
 
 export default function UsersPage(): React.JSX.Element {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -284,7 +285,13 @@ export default function UsersPage(): React.JSX.Element {
                                                                 setDialog(<React.Fragment></React.Fragment>)
                                                             }}
                                                             deleteUserTrigger={() => {
-
+                                                                deletePupil(pupil?.key).then(res => {
+                                                                    let message = (res?.error ? "Произошла ошибка при удалении ученицы" : "Ученица удалена")
+                                                                    setDialog(<React.Fragment></React.Fragment>)
+                                                                    setMessage(Message((res?.error ? "ERROR" : "INFO"), message))
+                                                                    setTimeout(() => setMessage(
+                                                                        <React.Fragment></React.Fragment>), 5100)
+                                                                })
                                                             }}
                                                         />))
                                                 }}
@@ -304,8 +311,8 @@ export default function UsersPage(): React.JSX.Element {
                                                                     setDialog(<React.Fragment></React.Fragment>)
                                                                 }}
                                                                 archiveUserTrigger={() => {
-                                                                    deletePupil(pupil?.key).then(res => {
-                                                                        let message = (res?.error ? "Произошла ошибка при удалении ученицы" : "Ученица удалена")
+                                                                    archivePupil(pupil?.key).then(res => {
+                                                                        let message = (res?.error ? "Произошла ошибка при архивации ученицы" : "Ученица архивирована")
                                                                         setDialog(<React.Fragment></React.Fragment>)
                                                                         setMessage(Message((res?.error ? "ERROR" : "INFO"), message))
                                                                         setTimeout(() => setMessage(
