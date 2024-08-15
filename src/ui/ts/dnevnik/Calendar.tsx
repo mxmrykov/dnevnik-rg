@@ -15,6 +15,7 @@ import {PreloadUser} from "../../../domain/http/user-preload.ts";
 // @ts-ignore
 import Message from "../message-aside/Message.tsx";
 // @ts-ignore
+
 import XlHeader, {XlHeaderColored} from "../elements/headers/Xl-header.tsx";
 import {FaPlus} from "react-icons/fa6";
 import {IoList, IoGridOutline} from "react-icons/io5";
@@ -63,6 +64,7 @@ export default function Calendar(): React.JSX.Element {
                 setUser(r.user)
                 setTimeout(() => setMessage(<React.Fragment></React.Fragment>), 5100)
                 setMessage(Message("SUCCESS", r.message))
+
                 let key: number
                 let route: string
                 switch (localStorage.getItem("role")) {
@@ -117,7 +119,6 @@ export default function Calendar(): React.JSX.Element {
             setMonthAvail(true)
         }
     }
-
     return <section className={"home-section"}>
         {message}
         {Sidebar({img: user?.logo_uri, fio: user?.fio})}
@@ -130,6 +131,7 @@ export default function Calendar(): React.JSX.Element {
                 </div>
                 <a href={"/calendar/create"} className={"button-basic line"}
                    style={{justifyContent: "space-between", marginInline: 12}}>
+
                     <FaPlus size={20} style={{marginRight: 5}}/>
                     Новое занятие
                 </a>

@@ -49,7 +49,6 @@ import BuildDialogNewUser from "../../../domain/app/dialog-building/build-dialog
 export default function CreateClass(): React.JSX.Element {
 
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
-
     const [newClassType, setNewClassType] = useState<string>()
     const [newClassCoach, setNewClassCoach] = useState<number>(0)
     const [newMultipleClassNumber, setNewMultipleClassNumber] = useState<number>(0)
@@ -114,6 +113,7 @@ export default function CreateClass(): React.JSX.Element {
         })
         setDataPreloaded(true)
     }
+
     return <section className={"home-section"}>
         {message}
         {Sidebar({img: user?.logo_uri, fio: user?.fio})}

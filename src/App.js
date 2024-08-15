@@ -11,6 +11,7 @@ import Class from "./ui/ts/dnevnik/Class.tsx";
 import Management from "./ui/ts/dnevnik/Management.tsx";
 import History from "./ui/ts/dnevnik/History.tsx";
 
+
 const homePath = {route: "/", elem: <Home/>}
 const homePagePath = {route: "/home", elem: <Homepage/>}
 const authPath = {route: "/auth", elem: <Authorization/>}
