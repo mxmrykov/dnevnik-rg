@@ -5,8 +5,7 @@ import XlHeader from "../elements/headers/Xl-header.tsx";
 
 export default function DialogWindow
 (header: string, body: React.JSX.Element): React.JSX.Element {
-    return <React.Fragment>
-        <div className={"dialog-window-bgblur"}/>
+    return <div className={"dialog-window-bgblur"}>
         <section
             style={{
                 height: "100vh",
@@ -22,5 +21,5 @@ export default function DialogWindow
                 {body}
             </article>
         </section>
-    </React.Fragment>
+    </div>
 }

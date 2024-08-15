@@ -7,6 +7,8 @@ import {
     pupilListModel,
     pupilModel, pupilsBdays
 } from "./users-models";
+import {cancelClassModel, deleteClassModel, timeAvailability} from "./sub-objects";
+import {MicroClasses, MicroClassesMap, ShortClassInfo} from "./class";
 
 export type PreloadPupilResponse = {
     data: pupilModel
@@ -73,4 +75,52 @@ export type getPupilsNearestBdayList = {
     status_code: number;
     message: string;
     isError: boolean;
+}
+export type getCoachSchedule = {
+    data: timeAvailability[],
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+
+export type CreateClassResponse = {
+    data: number,
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+
+export type GetTodayClass = {
+    data: ShortClassInfo[],
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+
+export type GetMonthClass = {
+    data: MicroClassesMap[],
+    status_code: number;
+    message: string;
+    isError: boolean;
+}
+
+export type CancelClass = {
+    data: cancelClassModel,
+    status_code: number,
+    message: string,
+    isError: boolean
+}
+
+export type DeleteClass = {
+    data: deleteClassModel,
+    status_code: number,
+    message: string,
+    isError: boolean
+}
+
+export type DeletePupil = {
+    data: null,
+    status_code: number,
+    message: string,
+    isError: boolean
 }

@@ -30,6 +30,7 @@ export default function BuildDialogNewUser(fio: string, userID: number, checksum
                 style={{marginInline: 5}}
                 onClick={() => {
                     navigator.clipboard.writeText(`${fio}\nID: ${userID}\nПароль: ${checksum}`)
+                    alert("Данные скопированы")
                 }}>
                 Скопировать данные
             </button>

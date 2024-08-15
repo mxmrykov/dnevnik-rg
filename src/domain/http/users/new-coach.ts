@@ -7,7 +7,6 @@ import {getFullAdminResponse, getFullCoachResponse} from "../../constants/respon
 import {adminFullModel, coachFullModel, newCoachModel} from "../../constants/users-models.ts";
 
 export default async function
-//fio: string, home_city: string, training_city: string, birthday: string, about: string
 (coach: newCoachModel):
     Promise<{ error: boolean, text: string, data: coachFullModel}> {
     return await constants.instance.post<getFullCoachResponse>(

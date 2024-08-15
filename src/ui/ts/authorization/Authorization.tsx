@@ -49,8 +49,7 @@ export default function Authorization() {
                                         setTimeout(() => window.location.href = "/home")
                                     }
                                 })
-                        }}
-                    >
+                        }}>
                         Войти
                     </button>
                 </article>
