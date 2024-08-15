@@ -16,7 +16,6 @@ export function isCoachValid(user: newCoachModel): boolean {
 }
 
 export function isPupilValid(user: newPupilModel): boolean {
-    console.log(user?.coach)
     return user?.fio?.split(" ").length === 3
         && user?.home_city?.length > 0
         && user?.training_city?.length > 0

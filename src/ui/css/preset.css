@@ -15,6 +15,17 @@ html, body {
     -moz-appearance: none;
 }
 
+input[type=checkbox] {
+    -webkit-appearance: checkbox;
+    -moz-appearance: checkbox;
+}
+
+input::-webkit-datetime-edit-day-field:focus,
+input::-webkit-datetime-edit-month-field:focus,
+input::-webkit-datetime-edit-year-field:focus {
+    background-color: rgba(255, 242, 183, 0.37);
+}
+
 ::-webkit-scrollbar {
     width: 7px;
 }
