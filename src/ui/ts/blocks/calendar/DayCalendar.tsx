@@ -128,7 +128,7 @@ export default function DayCalendar({classes, menuType, setDialog, setMessage}):
                                                 {" " + _class?.class_time}
                                             </span>
                                         </h4>
-                                    </span>
+                            </span>
                             <span>
                                         <h4 style={{marginBlock: 5}}>
                                             Длительность:

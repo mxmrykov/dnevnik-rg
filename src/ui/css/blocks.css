@@ -247,3 +247,26 @@
     border-radius: 3px;
     box-sizing: border-box;
 }
+
+.empty-history-block {
+    width: 350px;
+    background-color: var(--dnevnik-windows-bg);
+    border-radius: var(--base-border-radius);
+    padding: var(--base-box-padding);
+    font-size: 1.5rem;
+    color: var(--base-font-color);
+    margin: 0 auto;
+    margin-block: 15px;
+    display: var(--base-position-flex);
+}
+
+.inbox-pupil-list {
+    margin-block: 15px;
+    height: 65px;
+    overflow-y: scroll;
+    background-color: rgba(0, 0, 0, 0.35);
+    padding: 8px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    box-shadow: 0 -16px 8px -13px rgba(0, 0, 0, 0.45) inset;
+}

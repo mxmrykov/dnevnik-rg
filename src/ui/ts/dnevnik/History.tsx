@@ -36,6 +36,10 @@ import PreloadCoachPupils from "../../../domain/http/preload-lists/preload-coach
 import GetClassesHistory from "../../../domain/http/classes/get-classes-history.ts";
 
 import {useSearchParams} from 'react-router-dom';
+// @ts-ignore
+import Space from "../elements/headers/Space.tsx";
+// @ts-ignore
+import ListHistory from "../blocks/History/ListHistory.tsx";
 
 export default function History(): React.JSX.Element {
     const [user, setUser] = useState<pupilModel | coachModel | adminModel>()
@@ -184,6 +188,21 @@ export default function History(): React.JSX.Element {
                 defaultSelectedCoachID={searchParams.get('filterCoachID')}
                 defaultSelectedPupilID={searchParams.get('filterPupilID')}
             />
+            {
+                history?.length === 0 ?
+                    <article
+                        className={"empty-history-block"}
+                    >
+                        Упс, похоже,
+                        {Space()}
+                        {XlHeaderColored("история")}
+                        {Space()}
+                        пуста
+                    </article> :
+                    <ListHistory
+                        history={history}
+                    />
+            }
         </section>
     </section>
 }
